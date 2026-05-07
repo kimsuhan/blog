@@ -1,0 +1,23 @@
+---
+import TagList from "./TagList.astro";
+
+interface Props {
+  title?: string;
+  slug?: string;
+  description?: string;
+  tags?: string[];
+}
+
+const {
+  title = "Sample Post",
+  slug = "sample-post",
+  description = "Post card scaffold",
+  tags = []
+} = Astro.props;
+---
+
+<article class="post-card">
+  <h2><a href={`/posts/${slug}`}>{title}</a></h2>
+  {description && <p>{description}</p>}
+  <TagList tags={tags} />
+</article>

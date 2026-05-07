@@ -1,0 +1,13 @@
+---
+interface Props {
+  slug?: string;
+  tags?: string[];
+}
+
+const { slug = "sample-post", tags = [] } = Astro.props;
+---
+
+<aside data-post-slug={slug} data-tags={tags.join(",")}>
+  <h2>Related Posts</h2>
+  <p>Related posts scaffold.</p>
+</aside>

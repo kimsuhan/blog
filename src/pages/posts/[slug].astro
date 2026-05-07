@@ -1,0 +1,12 @@
+---
+import Layout from "@/components/Layout.astro";
+
+const { slug } = Astro.params;
+---
+
+<Layout title={slug ?? "Post"}>
+  <main class="container">
+    <h1>{slug}</h1>
+    <p>Post detail page scaffold.</p>
+  </main>
+</Layout>

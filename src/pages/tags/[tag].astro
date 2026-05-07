@@ -1,0 +1,12 @@
+---
+import Layout from "@/components/Layout.astro";
+
+const { tag } = Astro.params;
+---
+
+<Layout title={`Tag: ${tag}`}>
+  <main class="container">
+    <h1>#{tag}</h1>
+    <p>Tag page scaffold.</p>
+  </main>
+</Layout>

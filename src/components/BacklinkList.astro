@@ -1,0 +1,12 @@
+---
+interface Props {
+  slug?: string;
+}
+
+const { slug = "sample-post" } = Astro.props;
+---
+
+<aside data-post-slug={slug}>
+  <h2>Backlinks</h2>
+  <p>Backlink list scaffold.</p>
+</aside>

@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+
+# Build output and framework cache
+dist/
+.astro/
+.vercel/
+.netlify/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# TypeScript
+*.tsbuildinfo
+
+# Local databases and generated runtime data
+*.sqlite
+*.sqlite3
+*.db
+tmp/
+temp/
+content/posts/**/*.md
+data/search-index.json
+data/graph-index.json
+!content/posts/.gitkeep
+
+# Docker local volumes or overrides
+docker/.data/
+docker/data/
+docker-compose.override.yml
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Coverage
+coverage/

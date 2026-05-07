@@ -1,0 +1,12 @@
+---
+import Layout from "@/components/Layout.astro";
+
+const { series } = Astro.params;
+---
+
+<Layout title={`Series: ${series}`}>
+  <main class="container">
+    <h1>{series}</h1>
+    <p>Series page scaffold.</p>
+  </main>
+</Layout>
