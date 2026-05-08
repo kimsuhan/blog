@@ -48,6 +48,7 @@ pnpm db:migrate
 | `tags` | 태그 목록 |
 | `post_tags` | 게시글과 태그 연결 |
 | `post_links` | wikilink, markdown link, tag link 및 백링크 관계 |
+| `post_search_index` | 제목, 본문, 태그, 시리즈 통합 검색 인덱스 |
 | `api_keys` | 관리자 API 키 해시와 상태 |
 | `publish_logs` | 게시글 생성, 수정, 발행, 삭제 이력 |
 
@@ -94,5 +95,5 @@ content/posts/2026/05/my-post.md
 | 4 | 홈, 게시글 상세, 태그, 시리즈, 404 페이지 |
 | 5 | Auth Middleware, 게시글 생성/수정/발행/삭제 API |
 | 6 | SeoHead, sitemap, RSS, robots.txt, JSON-LD, canonical |
-| 7 | 태그 파싱, wikilink 파싱, post_links 저장, 백링크, 관련 글 |
+| 7 | 검색 인덱스 생성, 태그 파싱, wikilink 파싱, post_links 저장, 백링크 |
 | 8 | Dockerfile, docker-compose, nginx.conf, Cloudflare DNS, SSL/TLS Full(strict) |

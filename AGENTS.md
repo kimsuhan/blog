@@ -13,6 +13,8 @@
 - `docs/development.md`
 - `docs/api.md`
 - `docs/mvp-roadmap.md`
+- `docs/design/*.md`
+- `docs/design/*.html`
 - `docs/task/*.md`
 
 ## 작업 원칙
@@ -50,22 +52,23 @@
 
 ## MVP 범위
 
-MVP는 Markdown 블로그 + DB 메타데이터 + 관리자 API + SEO + 배포까지다.
+MVP는 Markdown 지식 아카이브 + DB 메타데이터 + 검색 인덱스 + 관리자 API + SEO + 배포까지다.
 
 MVP에 포함:
 
-- 홈, 게시글 상세, 태그, 시리즈, 404 페이지
+- 홈 검색 화면, 게시글 상세, 태그, 시리즈, 404 페이지
 - Markdown 파일 읽기
 - Frontmatter 파싱
 - Markdown HTML 변환
 - PostgreSQL / Drizzle 기본 schema와 migration
+- 제목, 본문, 태그 통합 검색을 위한 DB 검색 인덱스
 - 게시글 생성, 수정, 발행, 삭제 관리자 API
 - Bearer Token 인증
 - SEO 메타태그, sitemap, RSS, robots.txt, Article JSON-LD
 - `[[wikilink]]` 파싱
-- 기본 백링크와 관련 글 표시
+- 기본 백링크와 내부 링크 표시
 - Docker Compose, Nginx, Cloudflare 배포 기준
-- Daisy UI 기반 텍스트 중심 UI
+- Daisy UI 기반 Library Archive 검색 중심 UI
 
 MVP 제외:
 
@@ -77,7 +80,7 @@ MVP 제외:
 - 조회수 통계
 - 자동 OG 이미지 생성
 - Meilisearch 연동
-- 고급 검색
+- 외부 검색 엔진 연동과 고급 필터 UI
 - 예약 발행
 - 이메일 구독
 - 다국어 지원
@@ -94,6 +97,8 @@ MVP 제외:
 ## 코드 작업 제한
 
 현재 단계에서는 기본적으로 `.md` 문서만 수정한다.
+
+예외적으로 `docs/design/*.html`은 구현 코드가 아니라 디자인 시안 문서로 취급한다. 사용자가 디자인 문서 정리를 요청한 경우에는 이 파일들을 읽고 분석할 수 있으며, 명시 요청이 있을 때만 수정한다.
 
 예외는 사용자가 명시적으로 다음과 같이 요청한 경우다.
 

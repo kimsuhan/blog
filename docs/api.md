@@ -58,7 +58,7 @@ POST /api/admin/posts
 6. tags / post_tags 저장
 7. wikilink 파싱
 8. post_links 저장
-9. search-index 갱신
+9. post_search_index 갱신
 10. graph-index 갱신
 ```
 
@@ -78,7 +78,7 @@ PATCH /api/admin/posts/:slug
 5. 태그 재계산
 6. 내부 링크 재계산
 7. updated_at 갱신
-8. search-index 갱신
+8. post_search_index 갱신
 ```
 
 ## 게시글 발행
