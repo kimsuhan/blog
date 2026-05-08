@@ -13,7 +13,6 @@ MVP 완료 후 진행할 Phase 2 작업을 실제 운영 경험에 맞춰 재정
 
 ## 작업 내용
 
-- AI 초안 생성 API 필요성 재검토
 - draft preview 페이지 설계
 - 검색 인덱스 고도화 방향 결정
 - Pagefind 또는 Meilisearch 선택 기준 정리
@@ -29,7 +28,6 @@ MVP 완료 후 진행할 Phase 2 작업을 실제 운영 경험에 맞춰 재정
 ## 하지 말 것
 
 - MVP 중간에 Phase 2 구현 시작하지 않기
-- AI 자동 publish 허용하지 않기
 
 ## 완료 기준
 

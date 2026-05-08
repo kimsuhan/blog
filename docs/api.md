@@ -16,13 +16,12 @@ Authorization: Bearer <ADMIN_API_TOKEN>
 | `PATCH` | `/api/admin/posts/:slug` | 게시글 본문 또는 메타데이터 수정 |
 | `POST` | `/api/admin/posts/:slug/publish` | 게시글 발행 |
 | `DELETE` | `/api/admin/posts/:slug` | 게시글 삭제, 기본은 archived 처리 |
-| `POST` | `/api/admin/posts/:slug/ai-draft` | MVP 이후 AI 초안 생성 |
 
 ## 인증 정책
 
 초기 구현은 `ADMIN_API_TOKEN` 기반 Bearer Token으로 시작한다.
 
-향후 외부 자동화 도구 또는 AI Skill API에서 관리자 API를 호출할 경우 요청 본문 변조 방지를 위해 HMAC 검증을 추가한다.
+향후 외부 자동화 도구에서 관리자 API를 호출할 경우 요청 본문 변조 방지를 위해 HMAC 검증을 추가한다.
 
 ```http
 X-Signature: sha256=<signature>
@@ -44,7 +43,7 @@ POST /api/admin/posts
   "tags": ["astro", "blog"],
   "series": "블로그 만들기",
   "markdown": "# Astro 블로그 시작하기\n\n본문 내용",
-  "draft": true
+  "status": "draft"
 }
 ```
 
@@ -92,8 +91,8 @@ POST /api/admin/posts/:slug/publish
 
 ```txt
 1. Auth 검증
-2. draft 상태 확인
-3. status = published 변경
+2. `posts.status = draft` 상태 확인
+3. `posts.status = published` 변경
 4. published_at 기록
 5. sitemap 갱신 대상 반영
 6. RSS 갱신 대상 반영
@@ -107,34 +106,6 @@ DELETE /api/admin/posts/:slug
 ```
 
 기본 처리 방식은 soft delete 또는 `archived` 상태 변경이다. 물리 삭제는 별도 옵션으로만 허용한다.
-
-## AI 초안 API
-
-AI 초안 API는 MVP 이후 2차 개발 범위다.
-
-```http
-POST /api/admin/posts/:slug/ai-draft
-```
-
-요청 예시:
-
-```json
-{
-  "topic": "개인 서버에 Astro 블로그 배포하기",
-  "targetKeywords": ["Astro 블로그", "개인 서버", "Cloudflare"],
-  "tone": "technical",
-  "internalLinks": ["cloudflare-domain-setting", "docker-compose-blog"]
-}
-```
-
-처리 원칙:
-
-```txt
-1. AI가 생성한 글은 무조건 draft 상태
-2. 자동 publish 금지
-3. 사람이 검토 후 publish
-4. AI 요청과 결과는 ai_drafts 테이블에 기록
-```
 
 ## 응답 형식
 

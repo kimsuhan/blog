@@ -9,7 +9,7 @@ title: "Task 12. 게시글 생성 API"
 
 ## 목표
 
-관리자 API로 Markdown 게시글을 draft 상태로 생성한다.
+관리자 API로 Markdown 게시글을 `posts.status = draft` 상태로 생성한다.
 
 ## 작업 내용
 
@@ -33,7 +33,6 @@ title: "Task 12. 게시글 생성 API"
 ## 하지 말 것
 
 - 자동 publish 하지 않기
-- AI 초안 생성하지 않기
 - 물리 삭제 구현하지 않기
 
 ## 완료 기준

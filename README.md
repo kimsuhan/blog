@@ -14,7 +14,6 @@
 - Markdown 파일 기반 콘텐츠 작성
 - 태그, 백링크, `[[wikilink]]` 지원
 - 관리자 API 인증: Bearer Token, 필요 시 HMAC 추가
-- AI 초안 생성은 MVP 이후 2차 개발 범위
 - Daisy UI 기반의 극도로 단순한 텍스트 중심 UI
 
 ## 문서

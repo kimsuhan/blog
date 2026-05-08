@@ -21,7 +21,6 @@ Markdown 기반 게시글을 작성하고, 개인 서버에 배포하여 SEO 기
 ## MVP 제외 기능
 
 ```txt
-AI 자동 글 작성
 시각적 링크 그래프
 관리자 대시보드
 댓글
@@ -39,7 +38,6 @@ Meilisearch 연동
 ## Phase 2
 
 ```txt
-AI 초안 생성 API
 draft preview 페이지
 검색 인덱스 생성
 Pagefind 또는 Meilisearch 연동

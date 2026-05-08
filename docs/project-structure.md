@@ -10,7 +10,7 @@
 
 개인 서버에 배포 가능한 블로그 시스템을 구축한다.
 
-순수 Markdown 기반으로 게시글을 작성하고, SEO 최적화와 내부 링크 구조를 활용해 검색 유입을 극대화한다. 인증된 API를 통해 게시글 작성, 수정, AI 초안 생성이 가능하도록 한다.
+순수 Markdown 기반으로 게시글을 작성하고, SEO 최적화와 내부 링크 구조를 활용해 검색 유입을 극대화한다. 인증된 API를 통해 게시글 작성, 수정, 발행 상태 관리가 가능하도록 한다.
 
 ## 2. 핵심 요구사항
 
@@ -20,7 +20,6 @@
 | 도메인 | Cloudflare 도메인 사용 |
 | 콘텐츠 작성 | 순수 Markdown |
 | 인증 | 관리자 API Auth 필수 |
-| AI 활용 | MVP 이후 AI 초안 생성 API 확장 |
 | SEO | 적극적인 SEO 최적화 |
 | 디자인 | 극도로 단순한 텍스트 중심 디자인 |
 | 내부 구조 | 태그, 백링크, Obsidian식 `[[wikilink]]` 지원 |
@@ -47,7 +46,6 @@
 | DNS / CDN / SSL | Cloudflare |
 | 스타일링 | Daisy UI |
 | 검색 | 초기 JSON 인덱스, 이후 Pagefind 또는 Meilisearch 확장 |
-| AI 연동 | OpenAI API 또는 외부 AI Skill API 호출 |
 
 ## 4. 전체 아키텍처
 
@@ -92,7 +90,7 @@ Astro를 `output: "server"` 모드로 운영한다.
 
 ### 선택 기준
 
-게시글은 DB의 발행 상태, draft 여부, 수정일, 태그, 내부 링크 정보를 반영해야 하므로 SSR 기반으로 시작한다.
+게시글은 DB의 `posts.status`, 수정일, 태그, 내부 링크 정보를 반영해야 하므로 SSR 기반으로 시작한다.
 
 성능 최적화가 필요해지면 게시글 HTML 캐시를 도입한다.
 
@@ -158,8 +156,7 @@ PostgreSQL = 글 상태와 구조화 데이터
 │  │        └─ posts/
 │  │           ├─ [slug].ts
 │  │           └─ [slug]/
-│  │              ├─ publish.ts
-│  │              └─ ai-draft.ts
+│  │              └─ publish.ts
 │  ├─ components/
 │  │  ├─ SeoHead.astro
 │  │  ├─ Layout.astro
@@ -176,8 +173,7 @@ PostgreSQL = 글 상태와 구조화 데이터
 │  │  ├─ post-store.ts
 │  │  ├─ seo.ts
 │  │  ├─ graph.ts
-│  │  ├─ search-index.ts
-│  │  └─ ai.ts
+│  │  └─ search-index.ts
 │  ├─ styles/
 │  │  └─ global.css
 │  └─ middleware.ts
@@ -217,7 +213,7 @@ slug: "astro-personal-blog"
 description: "개인 서버에 Astro 기반 Markdown 블로그를 구축하는 방법"
 date: "2026-05-07"
 updated: "2026-05-07"
-draft: true
+status: "draft"
 tags:
   - astro
   - blog
@@ -257,7 +253,6 @@ ogImage: "/og/astro-personal-blog.png"
 | `post_tags` | 게시글과 태그의 N:M 관계 |
 | `post_links` | wikilink, markdown link, tag link 관계 |
 | `api_keys` | 관리자 API 키 해시와 상태 |
-| `ai_drafts` | MVP 이후 AI 초안 요청과 결과 상태 |
 | `publish_logs` | 생성, 수정, 발행, 삭제 이력 |
 
 `posts` 주요 필드:
@@ -290,7 +285,7 @@ tag
 
 관리자 API는 외부에 노출될 수 있으므로 인증을 필수로 둔다.
 
-기본 인증 방식은 `Authorization: Bearer <token>`이며, 자동화 도구나 외부 AI Skill API 연동 시 요청 변조 방지를 위해 선택적으로 HMAC 검증을 추가한다.
+기본 인증 방식은 `Authorization: Bearer <token>`이며, 외부 자동화 도구 연동 시 요청 변조 방지를 위해 선택적으로 HMAC 검증을 추가한다.
 
 예상 API 범위:
 
@@ -300,7 +295,6 @@ tag
 | `PATCH /api/admin/posts/:slug` | 게시글 메타데이터 또는 본문 수정 |
 | `POST /api/admin/posts/:slug/publish` | 게시글 발행 |
 | `DELETE /api/admin/posts/:slug` | 게시글 삭제, 기본은 archived 처리 |
-| `POST /api/admin/posts/:slug/ai-draft` | MVP 이후 AI 글 초안 생성 |
 
 ## 12. SEO 전략
 
@@ -396,7 +390,7 @@ API 요청 로그 저장
 게시글 발행 보호:
 
 ```txt
-AI 작성 글은 draft만 가능
+게시글은 기본적으로 `posts.status = draft` 상태로 생성
 publish API는 별도 호출 필요
 delete는 soft delete 또는 archived 처리 기본값
 관리자 API는 HTTPS에서만 사용
@@ -463,29 +457,17 @@ archived
 
 ```txt
 1. Markdown 직접 작성 또는 API 작성
-2. draft 상태 저장
+2. `posts.status = draft` 상태로 저장
 3. 미리보기 확인
 4. SEO 메타데이터 확인
 5. publish API 호출
 6. 공개 페이지 반영
 ```
 
-AI 작성 플로우는 MVP 이후 범위다.
-
-```txt
-1. 주제 입력
-2. AI 초안 생성
-3. draft 저장
-4. 사람이 검토
-5. 수정
-6. publish
-```
-
 ## 18. 확장 방향
 
 - 게시글 HTML 캐시 도입
 - Pagefind 또는 Meilisearch 기반 검색 고도화
-- AI 초안 생성 프롬프트 템플릿 관리
 - 태그 추천, 내부 링크 추천, SEO 점수 계산
 - 관리자 UI 추가
 - 백업 및 복구 자동화
