@@ -1,6 +1,6 @@
 ---
-status: todo
-status_label: 할일
+status: done
+status_label: 완료
 order: 10
 title: "Task 10. RSS, Sitemap, Robots 구현"
 ---

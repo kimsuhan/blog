@@ -27,3 +27,12 @@ export function canonicalUrl(pathOrUrl: string): string {
 export function pageTitle(title: string): string {
   return title === siteName ? title : `${title} | ${siteName}`;
 }
+
+export function escapeXml(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&apos;");
+}
