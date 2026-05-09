@@ -46,6 +46,33 @@ export function renderMarkdown(body: string): string {
   });
 }
 
+export function serializeMarkdownPost(metadata: PostMetadata, body: string): string {
+  const lines = [
+    "---",
+    `title: ${quoteYaml(metadata.title)}`,
+    `slug: ${quoteYaml(metadata.slug)}`,
+    `description: ${quoteYaml(metadata.description)}`,
+    `date: ${quoteYaml(metadata.date)}`,
+    `updated: ${quoteYaml(metadata.updated)}`,
+    `status: ${quoteYaml(metadata.status)}`,
+    "tags:",
+    ...metadata.tags.map((tag) => `  - ${quoteYaml(tag)}`),
+    `series: ${metadata.series ? quoteYaml(metadata.series) : "null"}`,
+    `canonical: ${metadata.canonical ? quoteYaml(metadata.canonical) : "null"}`,
+    `ogImage: ${metadata.ogImage ? quoteYaml(metadata.ogImage) : "null"}`,
+    "---",
+    "",
+    body.trim(),
+    ""
+  ];
+
+  return lines.join("\n");
+}
+
+function quoteYaml(value: string): string {
+  return JSON.stringify(value);
+}
+
 function normalizePostMetadata(data: Record<string, unknown>): PostMetadata {
   const title = requiredString(data.title, "title");
   const slug = requiredString(data.slug, "slug");

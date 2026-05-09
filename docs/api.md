@@ -65,11 +65,12 @@ POST /api/admin/posts
 4. frontmatter 생성
 5. posts 테이블 저장
 6. tags / post_tags 저장
-7. wikilink 파싱
-8. post_links 저장
-9. post_search_index 갱신
-10. graph-index 갱신
+7. wikilink 파싱은 후속 task에서 처리
+8. post_links 저장은 후속 task에서 처리
+9. post_search_index 갱신은 후속 task에서 처리
 ```
+
+생성 API는 요청의 `status` 값과 관계없이 초기에 `draft`로 저장한다. 성공 응답은 생성된 slug, status, Markdown 경로를 포함한다.
 
 ## 게시글 수정
 

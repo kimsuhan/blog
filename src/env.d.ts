@@ -2,6 +2,7 @@
 
 interface ImportMetaEnv {
   readonly ADMIN_API_TOKEN?: string;
+  readonly DATABASE_URL?: string;
   readonly SITE_URL?: string;
 }
 
