@@ -13,15 +13,17 @@ const { title, description } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="ko">
+<html lang="ko" data-theme="light">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <SeoHead title={title} description={description} />
   </head>
-  <body>
+  <body class="min-h-screen bg-base-100 text-base-content antialiased">
     <Header />
-    <slot />
+    <div class="min-h-[calc(100vh-9rem)] py-12 sm:py-16">
+      <slot />
+    </div>
     <Footer />
   </body>
 </html>

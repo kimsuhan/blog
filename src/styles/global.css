@@ -1,13 +1,30 @@
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: light --default, dark;
+}
+
 :root {
   color-scheme: light;
+  --archive-line: color-mix(in srgb, currentColor 18%, transparent);
+  --archive-muted: color-mix(in srgb, currentColor 58%, transparent);
+  --archive-surface: #f9f9f9;
   font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   line-height: 1.6;
 }
 
+[data-theme="dark"] {
+  color-scheme: dark;
+  --archive-surface: #151515;
+}
+
+html {
+  min-height: 100%;
+  background: var(--color-base-100);
+}
+
 body {
+  min-height: 100%;
   margin: 0;
-  color: #111;
-  background: #fff;
 }
 
 a {
@@ -19,15 +36,33 @@ a {
 .container,
 .site-header,
 .site-footer {
-  width: min(100% - 32px, 760px);
+  width: min(100% - 32px, 800px);
+  margin-inline: auto;
+}
+
+.content-container {
+  width: min(100% - 32px, 720px);
   margin-inline: auto;
 }
 
 .site-header,
 .site-footer {
-  display: flex;
-  justify-content: space-between;
-  padding-block: 20px;
+  border-color: var(--archive-line);
+}
+
+.archive-label {
+  font-family:
+    ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.archive-muted {
+  color: var(--archive-muted);
 }
 
 .post-list {
@@ -36,7 +71,7 @@ a {
 }
 
 .post-card {
-  border-top: 1px solid #ddd;
+  border-top: 1px solid var(--archive-line);
   padding-top: 16px;
 }
 
@@ -52,6 +87,7 @@ a {
   width: 100%;
   padding: 10px 0;
   border: 0;
-  border-bottom: 1px solid #111;
+  border-bottom: 1px solid currentColor;
+  background: transparent;
   font: inherit;
 }

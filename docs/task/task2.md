@@ -1,6 +1,6 @@
 ---
-status: todo
-status_label: 할일
+status: done
+status_label: 완료
 order: 2
 title: "Task 2. Daisy UI / Tailwind 기본 연결"
 ---

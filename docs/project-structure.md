@@ -49,7 +49,7 @@ SEO 최적화와 제목·본문·태그 통합 검색 인덱스를 활용해 필
 | 패키지 관리 | pnpm |
 | 리버스 프록시 | Nginx |
 | DNS / CDN / SSL | Cloudflare |
-| 스타일링 | Daisy UI |
+| 스타일링 | Tailwind CSS v4 + Daisy UI v5 |
 | 검색 | PostgreSQL 검색 인덱스 테이블, 이후 Pagefind 또는 Meilisearch 확장 |
 
 ## 4. 전체 아키텍처
@@ -207,6 +207,19 @@ PostgreSQL = 글 상태와 구조화 데이터
 | Auth Middleware | 관리자 API 요청 인증 |
 | DB Client | PostgreSQL 연결 및 Drizzle ORM 쿼리 관리 |
 | Search Indexer | 제목, 본문, 태그, 시리즈를 통합한 PostgreSQL 검색 인덱스 생성 |
+
+## 8.1 스타일링 기준
+
+Tailwind CSS v4와 Daisy UI v5는 `src/styles/global.css`에서 CSS-first 방식으로 연결한다.
+
+Daisy UI는 theme 변수, form, button, 접근성 상태 같은 기본 UI 토대에 사용하고, 공개 화면의 시각 언어는 `docs/design/design-concept.md`의 Library Archive 기준을 따른다.
+
+| 화면 영역 | 최대 폭 |
+| --- | --- |
+| 랜딩 / 목록 컨테이너 | 800px |
+| 글 상세 본문 | 720px |
+
+타이포그래피는 headline/body에 serif를 우선 적용하고, metadata/label에는 sans-serif uppercase를 사용한다. 색상은 white/black/grey 중심의 monochrome palette를 유지하며, 선은 얇고 여백은 넉넉하게 잡는다.
 
 ## 9. Markdown 작성 규칙
 

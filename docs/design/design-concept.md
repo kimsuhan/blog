@@ -81,3 +81,29 @@ MVP에서 보류할 디자인 요소:
 - 본문 최대 폭은 기존 문서의 720px 기준과 시안의 800px container 기준을 함께 검토한다. 글 상세 본문은 720px를 우선하고, 랜딩 목록 컨테이너는 최대 800px까지 허용한다.
 - 모바일에서는 phase1의 검색 아이콘, phase2의 날짜/reference 영역, 목록 카드 간격이 깨지지 않도록 별도 확인한다.
 - 글 상세 화면은 다른 문서를 과하게 추천하지 않는다. 백링크와 내부 링크는 문서 이해를 돕는 보조 정보로만 배치한다.
+
+## 10. 전역 스타일 토큰 기준
+
+Task 2 기준으로 Tailwind CSS v4와 Daisy UI v5는 `src/styles/global.css`에서 CSS-first 방식으로 연결한다.
+
+```css
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: light --default, dark;
+}
+```
+
+전역 스타일은 Library Archive 콘셉트를 우선하고 Daisy UI는 form, button, theme 변수, 접근성 상태 같은 UI 토대에 제한적으로 사용한다.
+
+| 기준 | 값 |
+| --- | --- |
+| 랜딩 / 목록 컨테이너 | `800px` 최대 폭 |
+| 글 상세 본문 컨테이너 | `720px` 최대 폭 |
+| headline / body | serif 계열, 기본은 system serif |
+| metadata / label | system sans-serif, uppercase |
+| palette | white / black / grey 중심 monochrome |
+| line | 1px 이하로 보이는 fine line 중심 |
+| spacing | 높은 여백, 낮은 장식 밀도 |
+| dark mode | Daisy UI `light` 기본, `data-theme="dark"` 선택 지원 기준 |
+
+외부 웹폰트는 MVP 기본 연결에 포함하지 않는다. 실제 Newsreader 적용 여부는 성능과 배포 정책을 확인한 뒤 별도 task에서 결정한다.
