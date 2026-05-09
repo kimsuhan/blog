@@ -35,6 +35,16 @@ export interface AdminPostResult {
   markdownPath: string;
 }
 
+export interface UpdatePostInput {
+  title?: string;
+  description?: string;
+  markdown?: string;
+  tags?: string[];
+  series?: string | null;
+  canonical?: string | null;
+  ogImage?: string | null;
+}
+
 export function getPostFilePath(year: string, month: string, filename: string): string {
   if (!/^\d{4}$/.test(year) || !/^\d{2}$/.test(month) || !/^[a-z0-9][a-z0-9-]*\.md$/.test(filename)) {
     throw new Error("Invalid post file path");
@@ -159,22 +169,59 @@ export async function createDraftPost(input: CreateDraftPostInput): Promise<Admi
     })
     .returning({ id: posts.id, slug: posts.slug, status: posts.status, markdownPath: posts.markdownPath });
 
-  for (const tagName of metadata.tags) {
-    const tagSlug = slugifyTag(tagName);
-    const [tag] = await db
-      .insert(tags)
-      .values({ name: tagName, slug: tagSlug })
-      .onConflictDoUpdate({
-        target: tags.slug,
-        set: { name: tagName }
-      })
-      .returning({ id: tags.id });
+  await syncPostTags(post.id, metadata.tags);
 
-    await db
-      .insert(postTags)
-      .values({ postId: post.id, tagId: tag.id })
-      .onConflictDoNothing();
+  return {
+    slug: post.slug,
+    status: post.status,
+    markdownPath: post.markdownPath
+  };
+}
+
+export async function updatePost(slug: string, input: UpdatePostInput): Promise<AdminPostResult> {
+  const existing = await db.query.posts.findFirst({
+    where: eq(posts.slug, slug)
+  });
+
+  if (!existing) {
+    throw new Error("Post not found");
   }
+
+  const filePath = path.join(process.cwd(), existing.markdownPath);
+  const current = await readMarkdownPost(filePath);
+  const updatedDate = new Date().toISOString().slice(0, 10);
+  const metadata: PostMetadata = {
+    ...current.metadata,
+    title: input.title === undefined ? current.metadata.title : normalizeRequiredString(input.title, "title"),
+    description:
+      input.description === undefined
+        ? current.metadata.description
+        : normalizeRequiredString(input.description, "description"),
+    updated: updatedDate,
+    tags: input.tags === undefined ? current.metadata.tags : normalizeTagsInput(input.tags),
+    series: input.series === undefined ? current.metadata.series : normalizeNullableString(input.series),
+    canonical:
+      input.canonical === undefined ? current.metadata.canonical : normalizeNullableString(input.canonical),
+    ogImage: input.ogImage === undefined ? current.metadata.ogImage : normalizeNullableString(input.ogImage)
+  };
+  const markdown = input.markdown === undefined ? current.body : normalizeRequiredString(input.markdown, "markdown");
+
+  await writeFile(filePath, serializeMarkdownPost(metadata, markdown), "utf8");
+  const [post] = await db
+    .update(posts)
+    .set({
+      title: metadata.title,
+      description: metadata.description,
+      series: metadata.series,
+      canonicalUrl: metadata.canonical,
+      ogImage: metadata.ogImage,
+      updatedAt: new Date()
+    })
+    .where(eq(posts.slug, slug))
+    .returning({ id: posts.id, slug: posts.slug, status: posts.status, markdownPath: posts.markdownPath });
+
+  await db.delete(postTags).where(eq(postTags.postId, post.id));
+  await syncPostTags(post.id, metadata.tags);
 
   return {
     slug: post.slug,
@@ -221,7 +268,7 @@ function normalizeCreateDraftInput(input: CreateDraftPostInput): Required<Create
   const slug = normalizeSlug(input.slug);
   const description = normalizeRequiredString(input.description, "description");
   const markdown = normalizeRequiredString(input.markdown, "markdown");
-  const tags = Array.from(new Set((input.tags ?? []).map((tag) => normalizeRequiredString(tag, "tags"))));
+  const tags = normalizeTagsInput(input.tags ?? []);
 
   return {
     title,
@@ -241,6 +288,14 @@ function normalizeRequiredString(value: unknown, field: string): string {
   }
 
   return value.trim();
+}
+
+function normalizeTagsInput(value: unknown): string[] {
+  if (!Array.isArray(value)) {
+    throw new Error("Invalid field: tags");
+  }
+
+  return Array.from(new Set(value.map((tag) => normalizeRequiredString(tag, "tags"))));
 }
 
 function normalizeNullableString(value: unknown): string | null {
@@ -281,4 +336,23 @@ async function assertFileDoesNotExist(filePath: string): Promise<void> {
 
 function padMonth(month: number): string {
   return String(month).padStart(2, "0");
+}
+
+async function syncPostTags(postId: string, tagNames: string[]): Promise<void> {
+  for (const tagName of tagNames) {
+    const tagSlug = slugifyTag(tagName);
+    const [tag] = await db
+      .insert(tags)
+      .values({ name: tagName, slug: tagSlug })
+      .onConflictDoUpdate({
+        target: tags.slug,
+        set: { name: tagName }
+      })
+      .returning({ id: tags.id });
+
+    await db
+      .insert(postTags)
+      .values({ postId, tagId: tag.id })
+      .onConflictDoNothing();
+  }
 }
