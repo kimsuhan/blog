@@ -1,6 +1,6 @@
 ---
-status: todo
-status_label: 할일
+status: done
+status_label: 완료
 order: 19
 title: "Task 19. 관련 글 표시"
 ---

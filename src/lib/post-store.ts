@@ -256,6 +256,45 @@ export async function listBacklinks(targetSlug: string): Promise<LinkedPostSumma
     .where(and(eq(postLinks.targetSlug, targetSlug), eq(posts.status, "published")));
 }
 
+export async function listOutgoingLinks(sourceSlug: string): Promise<LinkedPostSummary[]> {
+  const sourcePost = await db.query.posts.findFirst({
+    where: eq(posts.slug, sourceSlug)
+  });
+
+  if (!sourcePost) {
+    return [];
+  }
+
+  const links = await db
+    .select({
+      targetSlug: postLinks.targetSlug
+    })
+    .from(postLinks)
+    .where(eq(postLinks.sourcePostId, sourcePost.id));
+  const uniqueSlugs = Array.from(new Set(links.map((link) => link.targetSlug))).filter(
+    (targetSlug) => targetSlug !== sourceSlug
+  );
+  const linkedPosts = await Promise.all(
+    uniqueSlugs.map((targetSlug) =>
+      db.query.posts.findFirst({
+        where: and(eq(posts.slug, targetSlug), eq(posts.status, "published"))
+      })
+    )
+  );
+
+  return linkedPosts.flatMap((post) =>
+    post
+      ? [
+          {
+            slug: post.slug,
+            title: post.title,
+            description: post.description
+          }
+        ]
+      : []
+  );
+}
+
 export async function publishPost(slug: string): Promise<AdminPostResult> {
   const existing = await db.query.posts.findFirst({
     where: eq(posts.slug, slug)

@@ -1,9 +1,10 @@
 ---
 import Layout from "@/components/Layout.astro";
 import BacklinkList from "@/components/BacklinkList.astro";
+import RelatedPosts from "@/components/RelatedPosts.astro";
 import TagList from "@/components/TagList.astro";
 import { renderMarkdown } from "@/lib/markdown";
-import { getPublishedPostBySlug, listBacklinks } from "@/lib/post-store";
+import { getPublishedPostBySlug, listBacklinks, listOutgoingLinks } from "@/lib/post-store";
 
 const { slug } = Astro.params;
 const post = slug ? await getPublishedPostBySlug(slug) : null;
@@ -14,6 +15,7 @@ if (!post) {
 
 const html = post ? renderMarkdown(post.body) : "";
 const backlinks = post ? await listBacklinks(post.metadata.slug) : [];
+const outgoingLinks = post ? await listOutgoingLinks(post.metadata.slug) : [];
 ---
 
 <Layout
@@ -39,6 +41,7 @@ const backlinks = post ? await listBacklinks(post.metadata.slug) : [];
           <TagList tags={post.metadata.tags} />
         </header>
         <div class="post-body" set:html={html} />
+        <RelatedPosts links={outgoingLinks} />
         <BacklinkList links={backlinks} />
       </article>
     ) : (

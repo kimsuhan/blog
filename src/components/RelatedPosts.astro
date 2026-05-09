@@ -1,13 +1,26 @@
 ---
 interface Props {
-  slug?: string;
-  tags?: string[];
+  links?: Array<{
+    slug: string;
+    title: string;
+    description: string | null;
+  }>;
 }
 
-const { slug = "sample-post", tags = [] } = Astro.props;
+const { links = [] } = Astro.props;
 ---
 
-<aside data-post-slug={slug} data-tags={tags.join(",")}>
-  <h2>Related Posts</h2>
-  <p>Related posts scaffold.</p>
-</aside>
+{links.length > 0 && (
+  <aside class="post-links-section" aria-labelledby="related-posts-heading">
+    <p class="archive-label archive-muted">Internal Links</p>
+    <h2 id="related-posts-heading">Linked records</h2>
+    <ul>
+      {links.map((link) => (
+        <li>
+          <a href={`/posts/${link.slug}`}>{link.title}</a>
+          {link.description && <p>{link.description}</p>}
+        </li>
+      ))}
+    </ul>
+  </aside>
+)}
