@@ -1,7 +1,7 @@
 import { access, mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { eq } from "drizzle-orm";
-import { postTags, posts, tags } from "../../drizzle/schema";
+import { postTags, posts, publishLogs, tags } from "../../drizzle/schema";
 import { db } from "./db";
 import {
   FrontmatterError,
@@ -222,6 +222,59 @@ export async function updatePost(slug: string, input: UpdatePostInput): Promise<
 
   await db.delete(postTags).where(eq(postTags.postId, post.id));
   await syncPostTags(post.id, metadata.tags);
+
+  return {
+    slug: post.slug,
+    status: post.status,
+    markdownPath: post.markdownPath
+  };
+}
+
+export async function publishPost(slug: string): Promise<AdminPostResult> {
+  const existing = await db.query.posts.findFirst({
+    where: eq(posts.slug, slug)
+  });
+
+  if (!existing) {
+    throw new Error("Post not found");
+  }
+
+  if (existing.status === "published") {
+    throw new Error("Post is already published");
+  }
+
+  if (existing.status !== "draft") {
+    throw new Error("Only draft posts can be published");
+  }
+
+  const filePath = path.join(process.cwd(), existing.markdownPath);
+  const current = await readMarkdownPost(filePath);
+  const now = new Date();
+  const date = now.toISOString().slice(0, 10);
+  const metadata: PostMetadata = {
+    ...current.metadata,
+    status: "published",
+    date: current.metadata.date || date,
+    updated: date
+  };
+
+  await writeFile(filePath, serializeMarkdownPost(metadata, current.body), "utf8");
+  const [post] = await db
+    .update(posts)
+    .set({
+      status: "published",
+      publishedAt: now,
+      updatedAt: now
+    })
+    .where(eq(posts.slug, slug))
+    .returning({ id: posts.id, slug: posts.slug, status: posts.status, markdownPath: posts.markdownPath });
+
+  await db.insert(publishLogs).values({
+    postId: post.id,
+    postSlug: post.slug,
+    action: "published",
+    metadata: { source: "admin_api" }
+  });
 
   return {
     slug: post.slug,

@@ -109,6 +109,8 @@ POST /api/admin/posts/:slug/publish
 7. publish_logs 저장
 ```
 
+이미 `published` 상태인 글은 `409`로 응답한다. `draft`가 아닌 다른 상태는 발행 대상이 아니므로 실패 처리한다.
+
 ## 게시글 삭제
 
 ```http

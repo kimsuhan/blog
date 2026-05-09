@@ -1,6 +1,6 @@
 ---
-status: todo
-status_label: 할일
+status: done
+status_label: 완료
 order: 14
 title: "Task 14. 게시글 발행 API"
 ---

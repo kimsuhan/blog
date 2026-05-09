@@ -43,7 +43,7 @@ title: "Task 1. 프로젝트 실행 기반 정리"
 | 11 | 완료 | [task11.md](./task11.md) | 인증 Middleware 구현 |
 | 12 | 완료 | [task12.md](./task12.md) | 게시글 생성 API |
 | 13 | 완료 | [task13.md](./task13.md) | 게시글 수정 API |
-| 14 | 할일 | [task14.md](./task14.md) | 게시글 발행 API |
+| 14 | 완료 | [task14.md](./task14.md) | 게시글 발행 API |
 | 15 | 할일 | [task15.md](./task15.md) | 게시글 삭제 API |
 | 16 | 할일 | [task16.md](./task16.md) | Wikilink 파싱 |
 | 17 | 할일 | [task17.md](./task17.md) | Post Links 저장과 백링크 |
