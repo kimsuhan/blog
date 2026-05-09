@@ -266,6 +266,10 @@ Markdown 파일은 `content/posts/YYYY/MM/*.md` 경로만 게시글 원문으로
 Frontmatter 파싱은 `gray-matter`를 사용한다. 파싱 결과는 `src/lib/markdown.ts`의 `PostMetadata` 타입으로 정규화하며, `status`는 `draft`, `published`, `archived` 중 하나만 허용한다.
 
 필수 frontmatter 필드가 없거나 타입이 맞지 않으면 `FrontmatterError`를 발생시킨다. 잘못된 frontmatter를 가진 파일은 게시글 목록이나 상세 조회에 정상 게시글로 포함하지 않고, 이후 관리자 API 또는 운영 로그에서 수정 대상으로 다룬다.
+
+Markdown HTML 렌더링은 `marked`를 사용한다. 코드블록, 이미지, 기본 링크는 GitHub Flavored Markdown 기준으로 변환한다.
+
+MVP의 Markdown 원문은 인증된 관리자 API나 운영자가 작성하는 신뢰 가능한 콘텐츠로 취급하므로 별도 HTML sanitizer는 우선 적용하지 않는다. 외부 사용자가 Markdown을 제출하는 기능이 추가되면 sanitize 라이브러리를 별도 task에서 도입한다.
 | 코드블록 | 기술 글 작성 |
 | 이미지 Markdown | 본문 이미지 삽입 |
 

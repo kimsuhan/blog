@@ -1,6 +1,6 @@
 ---
-status: todo
-status_label: 할일
+status: done
+status_label: 완료
 order: 6
 title: "Task 6. Markdown HTML 렌더링"
 ---

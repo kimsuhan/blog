@@ -1,4 +1,5 @@
 import matter from "gray-matter";
+import { marked } from "marked";
 
 export const postStatuses = ["draft", "published", "archived"] as const;
 
@@ -36,6 +37,13 @@ export function parseMarkdownPost(source: string): ParsedMarkdownPost {
     metadata: normalizePostMetadata(parsed.data),
     body: parsed.content.trim()
   };
+}
+
+export function renderMarkdown(body: string): string {
+  return marked.parse(body, {
+    async: false,
+    gfm: true
+  });
 }
 
 function normalizePostMetadata(data: Record<string, unknown>): PostMetadata {

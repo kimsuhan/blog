@@ -1,12 +1,42 @@
 ---
 import Layout from "@/components/Layout.astro";
+import TagList from "@/components/TagList.astro";
+import { renderMarkdown } from "@/lib/markdown";
+import { listMarkdownPosts } from "@/lib/post-store";
 
 const { slug } = Astro.params;
+const posts = await listMarkdownPosts();
+const post = posts.find((item) => item.metadata.slug === slug);
+
+if (!post) {
+  Astro.response.status = 404;
+}
+
+const html = post ? renderMarkdown(post.body) : "";
 ---
 
-<Layout title={slug ?? "Post"}>
-  <main class="container">
-    <h1>{slug}</h1>
-    <p>Post detail page scaffold.</p>
+<Layout title={post?.metadata.title ?? "Post not found"} description={post?.metadata.description}>
+  <main class="content-container">
+    {post ? (
+      <article class="post-detail">
+        <header class="post-detail-header">
+          <p class="archive-label archive-muted">Reference Code / {post.metadata.slug}</p>
+          <h1>{post.metadata.title}</h1>
+          <p class="post-description">{post.metadata.description}</p>
+          <div class="post-meta archive-label archive-muted">
+            <time datetime={post.metadata.date}>{post.metadata.date}</time>
+            <span>{post.metadata.status}</span>
+          </div>
+          <TagList tags={post.metadata.tags} />
+        </header>
+        <div class="post-body" set:html={html} />
+      </article>
+    ) : (
+      <article class="post-detail">
+        <p class="archive-label archive-muted">Not Found</p>
+        <h1>Post not found</h1>
+        <p>The requested archive record does not exist.</p>
+      </article>
+    )}
   </main>
 </Layout>
