@@ -7,6 +7,7 @@ import {
   FrontmatterError,
   parseMarkdownPost,
   serializeMarkdownPost,
+  collectPostTags,
   type ParsedMarkdownPost,
   type PostMetadata
 } from "./markdown";
@@ -145,6 +146,7 @@ export async function createDraftPost(input: CreateDraftPostInput): Promise<Admi
 
   await assertFileDoesNotExist(markdownPath);
 
+  const tags = collectPostTags(normalized.tags, normalized.markdown);
   const metadata: PostMetadata = {
     slug: normalized.slug,
     title: normalized.title,
@@ -152,7 +154,7 @@ export async function createDraftPost(input: CreateDraftPostInput): Promise<Admi
     date,
     updated: date,
     status: "draft",
-    tags: normalized.tags,
+    tags,
     series: normalized.series,
     canonical: normalized.canonical,
     ogImage: normalized.ogImage
@@ -206,7 +208,10 @@ export async function updatePost(slug: string, input: UpdatePostInput): Promise<
         ? current.metadata.description
         : normalizeRequiredString(input.description, "description"),
     updated: updatedDate,
-    tags: input.tags === undefined ? current.metadata.tags : normalizeTagsInput(input.tags),
+    tags: collectPostTags(
+      input.tags === undefined ? current.metadata.tags : normalizeTagsInput(input.tags),
+      input.markdown === undefined ? current.body : normalizeRequiredString(input.markdown, "markdown")
+    ),
     series: input.series === undefined ? current.metadata.series : normalizeNullableString(input.series),
     canonical:
       input.canonical === undefined ? current.metadata.canonical : normalizeNullableString(input.canonical),

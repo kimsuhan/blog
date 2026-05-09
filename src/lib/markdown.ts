@@ -70,6 +70,25 @@ export function serializeMarkdownPost(metadata: PostMetadata, body: string): str
   return lines.join("\n");
 }
 
+export function extractInlineTags(body: string): string[] {
+  const segments = body.split(/(```[\s\S]*?```|`[^`\n]*`)/g);
+  const tags = segments.flatMap((segment) => {
+    if (segment.startsWith("`")) {
+      return [];
+    }
+
+    return Array.from(segment.matchAll(/(^|[\s(])#([a-zA-Z0-9가-힣][a-zA-Z0-9가-힣_-]*)/g)).map(
+      (match) => match[2]
+    );
+  });
+
+  return Array.from(new Set(tags));
+}
+
+export function collectPostTags(frontmatterTags: string[], body: string): string[] {
+  return Array.from(new Set([...frontmatterTags, ...extractInlineTags(body)]));
+}
+
 function quoteYaml(value: string): string {
   return JSON.stringify(value);
 }
