@@ -1,10 +1,36 @@
 ---
 import Layout from "@/components/Layout.astro";
+import PostCard from "@/components/PostCard.astro";
+import { listPublishedPosts } from "@/lib/post-store";
+
+const posts = await listPublishedPosts();
 ---
 
-<Layout title="Markdown SEO Blog">
+<Layout title="Library Archive" description="Search-first Markdown knowledge archive">
   <main class="container">
-    <h1>Markdown SEO Blog</h1>
-    <p>Initial project scaffold.</p>
+    <section class="archive-section">
+      <p class="archive-label archive-muted">Search First Archive</p>
+      <h1>Library Archive</h1>
+      <a class="search-entry" href="/search" aria-label="Search archive">Search</a>
+    </section>
+
+    <section class="archive-section">
+      <div class="section-heading">
+        <p class="archive-label archive-muted">Recent Accessions</p>
+        <span class="archive-label archive-muted">{posts.length} records</span>
+      </div>
+      <div class="post-list">
+        {posts.map((post) => (
+          <PostCard
+            title={post.metadata.title}
+            slug={post.metadata.slug}
+            description={post.metadata.description}
+            date={post.metadata.date}
+            series={post.metadata.series}
+            tags={post.metadata.tags}
+          />
+        ))}
+      </div>
+    </section>
   </main>
 </Layout>

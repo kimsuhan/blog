@@ -2,11 +2,10 @@
 import Layout from "@/components/Layout.astro";
 import TagList from "@/components/TagList.astro";
 import { renderMarkdown } from "@/lib/markdown";
-import { listMarkdownPosts } from "@/lib/post-store";
+import { getPublishedPostBySlug } from "@/lib/post-store";
 
 const { slug } = Astro.params;
-const posts = await listMarkdownPosts();
-const post = posts.find((item) => item.metadata.slug === slug);
+const post = slug ? await getPublishedPostBySlug(slug) : null;
 
 if (!post) {
   Astro.response.status = 404;

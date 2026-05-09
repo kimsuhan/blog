@@ -5,6 +5,8 @@ interface Props {
   title?: string;
   slug?: string;
   description?: string;
+  date?: string;
+  series?: string | null;
   tags?: string[];
 }
 
@@ -12,12 +14,19 @@ const {
   title = "Sample Post",
   slug = "sample-post",
   description = "Post card scaffold",
+  date,
+  series,
   tags = []
 } = Astro.props;
 ---
 
 <article class="post-card">
+  <div class="post-card-meta archive-label archive-muted">
+    {date && <time datetime={date}>{date}</time>}
+    <span>REF / {slug}</span>
+  </div>
   <h2><a href={`/posts/${slug}`}>{title}</a></h2>
-  {description && <p>{description}</p>}
+{description && <p>{description}</p>}
+  {series && <a class="archive-label" href={`/series/${encodeURIComponent(series)}`}>{series}</a>}
   <TagList tags={tags} />
 </article>

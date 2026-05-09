@@ -1,12 +1,31 @@
 ---
 import Layout from "@/components/Layout.astro";
+import PostCard from "@/components/PostCard.astro";
+import { listPublishedPostsByTag } from "@/lib/post-store";
 
 const { tag } = Astro.params;
+const decodedTag = tag ? decodeURIComponent(tag) : "";
+const posts = decodedTag ? await listPublishedPostsByTag(decodedTag) : [];
 ---
 
-<Layout title={`Tag: ${tag}`}>
+<Layout title={`Tag: ${decodedTag}`} description={`Posts tagged ${decodedTag}`}>
   <main class="container">
-    <h1>#{tag}</h1>
-    <p>Tag page scaffold.</p>
+    <section class="archive-section">
+      <p class="archive-label archive-muted">Tag Index</p>
+      <h1>#{decodedTag}</h1>
+      <div class="post-list">
+        {posts.map((post) => (
+          <PostCard
+            title={post.metadata.title}
+            slug={post.metadata.slug}
+            description={post.metadata.description}
+            date={post.metadata.date}
+            series={post.metadata.series}
+            tags={post.metadata.tags}
+          />
+        ))}
+      </div>
+      {posts.length === 0 && <p class="archive-muted">No published records found.</p>}
+    </section>
   </main>
 </Layout>

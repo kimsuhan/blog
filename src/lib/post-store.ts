@@ -1,6 +1,6 @@
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
-import { parseMarkdownPost, type ParsedMarkdownPost } from "./markdown";
+import { FrontmatterError, parseMarkdownPost, type ParsedMarkdownPost } from "./markdown";
 
 const postsRoot = path.join(process.cwd(), "content", "posts");
 const postPathPattern = /^\d{4}\/\d{2}\/[^/]+\.md$/;
@@ -35,9 +35,55 @@ export async function readMarkdownPost(filePath: string): Promise<PostRecord> {
 
 export async function listMarkdownPosts(): Promise<PostRecord[]> {
   const filePaths = await listPostFiles(postsRoot);
-  const posts = await Promise.all(filePaths.map((filePath) => readMarkdownPost(filePath)));
+  const results = await Promise.allSettled(filePaths.map((filePath) => readMarkdownPost(filePath)));
+  const posts = results.flatMap((result) => {
+    if (result.status === "fulfilled") {
+      return [result.value];
+    }
 
-  return posts.sort((a, b) => b.metadata.date.localeCompare(a.metadata.date));
+    if (result.reason instanceof FrontmatterError) {
+      console.warn(result.reason.message);
+      return [];
+    }
+
+    throw result.reason;
+  });
+
+  return sortPosts(posts);
+}
+
+export async function listPublishedPosts(): Promise<PostRecord[]> {
+  const posts = await listMarkdownPosts();
+
+  return posts.filter((post) => post.metadata.status === "published");
+}
+
+export async function getPostBySlug(slug: string): Promise<PostRecord | null> {
+  const posts = await listMarkdownPosts();
+
+  return posts.find((post) => post.metadata.slug === slug) ?? null;
+}
+
+export async function getPublishedPostBySlug(slug: string): Promise<PostRecord | null> {
+  const post = await getPostBySlug(slug);
+
+  return post?.metadata.status === "published" ? post : null;
+}
+
+export async function listPublishedPostsByTag(tag: string): Promise<PostRecord[]> {
+  const posts = await listPublishedPosts();
+  const normalizedTag = tag.toLowerCase();
+
+  return posts.filter((post) =>
+    post.metadata.tags.some((postTag) => postTag.toLowerCase() === normalizedTag)
+  );
+}
+
+export async function listPublishedPostsBySeries(series: string): Promise<PostRecord[]> {
+  const posts = await listPublishedPosts();
+  const normalizedSeries = series.toLowerCase();
+
+  return posts.filter((post) => post.metadata.series?.toLowerCase() === normalizedSeries);
 }
 
 async function listPostFiles(directory: string): Promise<string[]> {
@@ -59,4 +105,16 @@ async function listPostFiles(directory: string): Promise<string[]> {
   );
 
   return files.flat();
+}
+
+function sortPosts(posts: PostRecord[]): PostRecord[] {
+  return [...posts].sort((a, b) => {
+    const byDate = b.metadata.date.localeCompare(a.metadata.date);
+
+    if (byDate !== 0) {
+      return byDate;
+    }
+
+    return a.metadata.title.localeCompare(b.metadata.title);
+  });
 }

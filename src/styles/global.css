@@ -70,9 +70,61 @@ a {
   gap: 24px;
 }
 
+.archive-section {
+  display: grid;
+  gap: 24px;
+  padding-block: 48px;
+}
+
+.archive-section + .archive-section {
+  border-top: 1px solid var(--archive-line);
+}
+
+.archive-section h1 {
+  margin: 0;
+  font-size: clamp(2.5rem, 10vw, 5rem);
+  font-weight: 400;
+  line-height: 0.95;
+}
+
+.section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.search-entry {
+  display: inline-flex;
+  width: max-content;
+  border-bottom: 1px solid currentColor;
+  text-decoration: none;
+}
+
 .post-card {
+  display: grid;
+  gap: 10px;
   border-top: 1px solid var(--archive-line);
   padding-top: 16px;
+}
+
+.post-card h2 {
+  margin: 0;
+  font-size: clamp(1.6rem, 6vw, 2.5rem);
+  font-weight: 400;
+  line-height: 1;
+}
+
+.post-card p {
+  max-width: 62ch;
+  margin: 0;
+  color: var(--archive-muted);
+}
+
+.post-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .tag-list {

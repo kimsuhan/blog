@@ -1,12 +1,31 @@
 ---
 import Layout from "@/components/Layout.astro";
+import PostCard from "@/components/PostCard.astro";
+import { listPublishedPostsBySeries } from "@/lib/post-store";
 
 const { series } = Astro.params;
+const decodedSeries = series ? decodeURIComponent(series) : "";
+const posts = decodedSeries ? await listPublishedPostsBySeries(decodedSeries) : [];
 ---
 
-<Layout title={`Series: ${series}`}>
+<Layout title={`Series: ${decodedSeries}`} description={`Posts in ${decodedSeries}`}>
   <main class="container">
-    <h1>{series}</h1>
-    <p>Series page scaffold.</p>
+    <section class="archive-section">
+      <p class="archive-label archive-muted">Series Index</p>
+      <h1>{decodedSeries}</h1>
+      <div class="post-list">
+        {posts.map((post) => (
+          <PostCard
+            title={post.metadata.title}
+            slug={post.metadata.slug}
+            description={post.metadata.description}
+            date={post.metadata.date}
+            series={post.metadata.series}
+            tags={post.metadata.tags}
+          />
+        ))}
+      </div>
+      {posts.length === 0 && <p class="archive-muted">No published records found.</p>}
+    </section>
   </main>
 </Layout>
