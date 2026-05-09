@@ -1,6 +1,6 @@
 ---
-status: todo
-status_label: 할일
+status: done
+status_label: 완료
 order: 5
 title: "Task 5. Markdown 파일 읽기와 Frontmatter 파싱"
 ---

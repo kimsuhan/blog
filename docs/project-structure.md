@@ -258,6 +258,14 @@ ogImage: "/og/astro-personal-blog.png"
 | `[[slug]]` | 내부 글 링크 |
 | `[[slug\|표시명]]` | 표시명이 있는 내부 링크 |
 | `#tag` | 인라인 태그 |
+
+### Markdown 읽기와 Frontmatter 처리
+
+Markdown 파일은 `content/posts/YYYY/MM/*.md` 경로만 게시글 원문으로 읽는다.
+
+Frontmatter 파싱은 `gray-matter`를 사용한다. 파싱 결과는 `src/lib/markdown.ts`의 `PostMetadata` 타입으로 정규화하며, `status`는 `draft`, `published`, `archived` 중 하나만 허용한다.
+
+필수 frontmatter 필드가 없거나 타입이 맞지 않으면 `FrontmatterError`를 발생시킨다. 잘못된 frontmatter를 가진 파일은 게시글 목록이나 상세 조회에 정상 게시글로 포함하지 않고, 이후 관리자 API 또는 운영 로그에서 수정 대상으로 다룬다.
 | 코드블록 | 기술 글 작성 |
 | 이미지 Markdown | 본문 이미지 삽입 |
 
