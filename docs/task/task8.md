@@ -1,6 +1,6 @@
 ---
-status: todo
-status_label: 할일
+status: done
+status_label: 완료
 order: 8
 title: "Task 8. 기본 블로그 페이지 구현"
 ---

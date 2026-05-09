@@ -2,9 +2,13 @@
 import Layout from "@/components/Layout.astro";
 ---
 
-<Layout title="404">
-  <main class="container">
-    <h1>404</h1>
-    <p>Not found page scaffold.</p>
+<Layout title="404" description="Archive record not found">
+  <main class="content-container">
+    <section class="error-page">
+      <p class="archive-label archive-muted">404 / Missing Record</p>
+      <h1>Record not found</h1>
+      <p>The requested archive entry is unavailable or has not been published.</p>
+      <a class="archive-label" href="/">Return to archive</a>
+    </section>
   </main>
 </Layout>
