@@ -1,5 +1,6 @@
 import matter from "gray-matter";
 import { marked } from "marked";
+import { replaceWikilinks } from "./graph";
 
 export const postStatuses = ["draft", "published", "archived"] as const;
 
@@ -40,7 +41,7 @@ export function parseMarkdownPost(source: string): ParsedMarkdownPost {
 }
 
 export function renderMarkdown(body: string): string {
-  return marked.parse(body, {
+  return marked.parse(replaceWikilinks(body), {
     async: false,
     gfm: true
   });

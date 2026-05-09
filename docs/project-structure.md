@@ -259,6 +259,8 @@ ogImage: "/og/astro-personal-blog.png"
 | `[[slug\|표시명]]` | 표시명이 있는 내부 링크 |
 | `#tag` | 인라인 태그 |
 
+`[[wikilink]]`는 렌더링 시 `/posts/{slug}` 링크로 변환한다. 존재하지 않는 slug도 링크 형태는 유지하며, 존재 여부 검증과 DB 저장은 post_links 처리 task에서 다룬다.
+
 ### Markdown 읽기와 Frontmatter 처리
 
 Markdown 파일은 `content/posts/YYYY/MM/*.md` 경로만 게시글 원문으로 읽는다.

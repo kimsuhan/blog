@@ -1,6 +1,6 @@
 ---
-status: todo
-status_label: 할일
+status: done
+status_label: 완료
 order: 16
 title: "Task 16. Wikilink 파싱"
 ---
