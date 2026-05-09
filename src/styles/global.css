@@ -357,6 +357,38 @@ a {
   color: var(--archive-muted);
 }
 
+.post-links-section {
+  display: grid;
+  gap: 14px;
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--archive-line);
+}
+
+.post-links-section h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 400;
+}
+
+.post-links-section ul {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.post-links-section li {
+  display: grid;
+  gap: 4px;
+}
+
+.post-links-section p {
+  margin: 0;
+  color: var(--archive-muted);
+}
+
 .error-page {
   display: grid;
   gap: 18px;

@@ -1,7 +1,7 @@
 import { access, mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { eq } from "drizzle-orm";
-import { postTags, posts, publishLogs, tags } from "../../drizzle/schema";
+import { and, eq } from "drizzle-orm";
+import { postLinks, postTags, posts, publishLogs, tags } from "../../drizzle/schema";
 import { db } from "./db";
 import {
   FrontmatterError,
@@ -10,6 +10,7 @@ import {
   type ParsedMarkdownPost,
   type PostMetadata
 } from "./markdown";
+import { parseWikilinks } from "./graph";
 
 const postsRoot = path.join(process.cwd(), "content", "posts");
 const postPathPattern = /^\d{4}\/\d{2}\/[^/]+\.md$/;
@@ -43,6 +44,12 @@ export interface UpdatePostInput {
   series?: string | null;
   canonical?: string | null;
   ogImage?: string | null;
+}
+
+export interface LinkedPostSummary {
+  slug: string;
+  title: string;
+  description: string | null;
 }
 
 export function getPostFilePath(year: string, month: string, filename: string): string {
@@ -170,6 +177,7 @@ export async function createDraftPost(input: CreateDraftPostInput): Promise<Admi
     .returning({ id: posts.id, slug: posts.slug, status: posts.status, markdownPath: posts.markdownPath });
 
   await syncPostTags(post.id, metadata.tags);
+  await syncPostLinks(post.id, metadata.slug, normalized.markdown);
 
   return {
     slug: post.slug,
@@ -222,12 +230,25 @@ export async function updatePost(slug: string, input: UpdatePostInput): Promise<
 
   await db.delete(postTags).where(eq(postTags.postId, post.id));
   await syncPostTags(post.id, metadata.tags);
+  await syncPostLinks(post.id, metadata.slug, markdown);
 
   return {
     slug: post.slug,
     status: post.status,
     markdownPath: post.markdownPath
   };
+}
+
+export async function listBacklinks(targetSlug: string): Promise<LinkedPostSummary[]> {
+  return db
+    .select({
+      slug: posts.slug,
+      title: posts.title,
+      description: posts.description
+    })
+    .from(postLinks)
+    .innerJoin(posts, eq(postLinks.sourcePostId, posts.id))
+    .where(and(eq(postLinks.targetSlug, targetSlug), eq(posts.status, "published")));
 }
 
 export async function publishPost(slug: string): Promise<AdminPostResult> {
@@ -449,5 +470,28 @@ async function syncPostTags(postId: string, tagNames: string[]): Promise<void> {
       .insert(postTags)
       .values({ postId, tagId: tag.id })
       .onConflictDoNothing();
+  }
+}
+
+async function syncPostLinks(postId: string, sourceSlug: string, markdown: string): Promise<void> {
+  await db.delete(postLinks).where(eq(postLinks.sourcePostId, postId));
+
+  for (const link of parseWikilinks(markdown)) {
+    if (link.targetSlug === sourceSlug) {
+      continue;
+    }
+
+    const targetPost = await db.query.posts.findFirst({
+      where: eq(posts.slug, link.targetSlug)
+    });
+
+    await db.insert(postLinks).values({
+      sourcePostId: postId,
+      targetPostId: targetPost?.id,
+      targetSlug: link.targetSlug,
+      linkType: "wikilink",
+      rawText: link.rawText,
+      displayText: link.displayText
+    });
   }
 }

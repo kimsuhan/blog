@@ -46,7 +46,7 @@ title: "Task 1. 프로젝트 실행 기반 정리"
 | 14 | 완료 | [task14.md](./task14.md) | 게시글 발행 API |
 | 15 | 완료 | [task15.md](./task15.md) | 게시글 삭제 API |
 | 16 | 완료 | [task16.md](./task16.md) | Wikilink 파싱 |
-| 17 | 할일 | [task17.md](./task17.md) | Post Links 저장과 백링크 |
+| 17 | 완료 | [task17.md](./task17.md) | Post Links 저장과 백링크 |
 | 18 | 할일 | [task18.md](./task18.md) | 태그 추출과 태그 페이지 |
 | 19 | 할일 | [task19.md](./task19.md) | 관련 글 표시 |
 | 20 | 할일 | [task20.md](./task20.md) | 스마트 검색 인덱스 1차 생성 |

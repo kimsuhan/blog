@@ -1,6 +1,6 @@
 ---
-status: todo
-status_label: 할일
+status: done
+status_label: 완료
 order: 17
 title: "Task 17. Post Links 저장과 백링크"
 ---
