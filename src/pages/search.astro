@@ -7,7 +7,7 @@ const previewPosts = posts.slice(0, 3);
 const previewTags = Array.from(new Set(posts.flatMap((post) => post.metadata.tags))).slice(0, 6);
 ---
 
-<Layout title="Search" description="Search the archive">
+<Layout title="Search" description="Search the archive" canonical="/search">
   <main class="search-page container">
     <a class="search-close archive-label archive-muted" href="/" aria-label="Close search">Close</a>
     <section class="search-panel" aria-label="Archive search">

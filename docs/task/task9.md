@@ -1,6 +1,6 @@
 ---
-status: todo
-status_label: 할일
+status: done
+status_label: 완료
 order: 9
 title: "Task 9. SEO Head 1차 구현"
 ---

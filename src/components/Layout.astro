@@ -7,9 +7,14 @@ import "@/styles/global.css";
 interface Props {
   title: string;
   description?: string;
+  canonical?: string;
+  ogImage?: string | null;
+  type?: "website" | "article";
+  publishedTime?: string | null;
+  modifiedTime?: string | null;
 }
 
-const { title, description } = Astro.props;
+const { title, description, canonical, ogImage, type, publishedTime, modifiedTime } = Astro.props;
 ---
 
 <!doctype html>
@@ -17,7 +22,15 @@ const { title, description } = Astro.props;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <SeoHead title={title} description={description} />
+    <SeoHead
+      title={title}
+      description={description}
+      canonical={canonical}
+      ogImage={ogImage}
+      type={type}
+      publishedTime={publishedTime}
+      modifiedTime={modifiedTime}
+    />
   </head>
   <body class="min-h-screen bg-base-100 text-base-content antialiased">
     <Header />

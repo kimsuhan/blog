@@ -8,7 +8,11 @@ const decodedTag = tag ? decodeURIComponent(tag) : "";
 const posts = decodedTag ? await listPublishedPostsByTag(decodedTag) : [];
 ---
 
-<Layout title={`Tag: ${decodedTag}`} description={`Posts tagged ${decodedTag}`}>
+<Layout
+  title={`Tag: ${decodedTag}`}
+  description={`Published archive records tagged ${decodedTag}`}
+  canonical={`/tags/${encodeURIComponent(decodedTag)}`}
+>
   <main class="container">
     <section class="archive-section">
       <p class="archive-label archive-muted">Tag Index</p>

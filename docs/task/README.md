@@ -38,7 +38,7 @@ title: "Task 1. 프로젝트 실행 기반 정리"
 | 6 | 완료 | [task6.md](./task6.md) | Markdown HTML 렌더링 |
 | 7 | 완료 | [task7.md](./task7.md) | Post Store 1차 구현 |
 | 8 | 완료 | [task8.md](./task8.md) | 기본 블로그 페이지 구현 |
-| 9 | 할일 | [task9.md](./task9.md) | SEO Head 1차 구현 |
+| 9 | 완료 | [task9.md](./task9.md) | SEO Head 1차 구현 |
 | 10 | 할일 | [task10.md](./task10.md) | RSS, Sitemap, Robots 구현 |
 | 11 | 할일 | [task11.md](./task11.md) | 인증 Middleware 구현 |
 | 12 | 할일 | [task12.md](./task12.md) | 게시글 생성 API |

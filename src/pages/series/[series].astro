@@ -8,7 +8,11 @@ const decodedSeries = series ? decodeURIComponent(series) : "";
 const posts = decodedSeries ? await listPublishedPostsBySeries(decodedSeries) : [];
 ---
 
-<Layout title={`Series: ${decodedSeries}`} description={`Posts in ${decodedSeries}`}>
+<Layout
+  title={`Series: ${decodedSeries}`}
+  description={`Published archive records in ${decodedSeries}`}
+  canonical={`/series/${encodeURIComponent(decodedSeries)}`}
+>
   <main class="container">
     <section class="archive-section">
       <p class="archive-label archive-muted">Series Index</p>

@@ -1,11 +1,42 @@
 ---
+import { absoluteUrl, defaultDescription, pageTitle } from "@/lib/seo";
+
 interface Props {
   title: string;
   description?: string;
+  canonical?: string;
+  ogImage?: string | null;
+  type?: "website" | "article";
+  publishedTime?: string | null;
+  modifiedTime?: string | null;
 }
 
-const { title, description = "Markdown SEO Blog" } = Astro.props;
+const {
+  title,
+  description = defaultDescription,
+  canonical,
+  ogImage,
+  type = "website",
+  publishedTime,
+  modifiedTime
+} = Astro.props;
+const fullTitle = pageTitle(title);
+const absoluteCanonical = canonical ? absoluteUrl(canonical) : undefined;
+const absoluteOgImage = ogImage ? absoluteUrl(ogImage) : undefined;
 ---
 
-<title>{title}</title>
+<title>{fullTitle}</title>
 <meta name="description" content={description} />
+{absoluteCanonical && <link rel="canonical" href={absoluteCanonical} />}
+<meta property="og:site_name" content="Library Archive" />
+<meta property="og:type" content={type} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+{absoluteCanonical && <meta property="og:url" content={absoluteCanonical} />}
+{absoluteOgImage && <meta property="og:image" content={absoluteOgImage} />}
+{publishedTime && <meta property="article:published_time" content={publishedTime} />}
+{modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+<meta name="twitter:card" content={absoluteOgImage ? "summary_large_image" : "summary"} />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+{absoluteOgImage && <meta name="twitter:image" content={absoluteOgImage} />}

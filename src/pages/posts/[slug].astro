@@ -14,7 +14,15 @@ if (!post) {
 const html = post ? renderMarkdown(post.body) : "";
 ---
 
-<Layout title={post?.metadata.title ?? "Post not found"} description={post?.metadata.description}>
+<Layout
+  title={post?.metadata.title ?? "Post not found"}
+  description={post?.metadata.description}
+  canonical={post?.metadata.canonical ?? (post ? `/posts/${post.metadata.slug}` : undefined)}
+  ogImage={post?.metadata.ogImage}
+  type={post ? "article" : "website"}
+  publishedTime={post?.metadata.date}
+  modifiedTime={post?.metadata.updated}
+>
   <main class="content-container">
     {post ? (
       <article class="post-detail">
