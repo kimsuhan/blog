@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { updatePost } from "@/lib/post-store";
+import { archivePost, updatePost } from "@/lib/post-store";
 
 export const PATCH: APIRoute = async ({ params, request }) => {
   try {
@@ -26,10 +26,25 @@ export const PATCH: APIRoute = async ({ params, request }) => {
 };
 
 export const DELETE: APIRoute = async ({ params, request }) => {
-  return Response.json({
-    ok: false,
-    slug: params.slug,
-    message: "Delete post endpoint scaffold",
-    method: request.method
-  }, { status: 501 });
+  try {
+    if (!params.slug) {
+      throw new Error("Post not found");
+    }
+
+    const post = await archivePost(params.slug);
+
+    return Response.json({
+      ok: true,
+      post,
+      physicalDelete: false
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Failed to archive post";
+    const status = message === "Post not found" ? 404 : 400;
+
+    return Response.json({
+      ok: false,
+      error: message
+    }, { status });
+  }
 };

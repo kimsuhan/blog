@@ -119,6 +119,8 @@ DELETE /api/admin/posts/:slug
 
 기본 처리 방식은 soft delete 또는 `archived` 상태 변경이다. 물리 삭제는 별도 옵션으로만 허용한다.
 
+MVP 기본 구현은 항상 `archived` 상태로 변경하고 Markdown 원본 파일은 유지한다. archived 글은 공개 페이지, RSS, sitemap 대상에서 제외된다.
+
 ## 응답 형식
 
 성공 응답은 `ok: true`를 포함한다.

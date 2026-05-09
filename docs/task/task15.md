@@ -1,6 +1,6 @@
 ---
-status: todo
-status_label: 할일
+status: done
+status_label: 완료
 order: 15
 title: "Task 15. 게시글 삭제 API"
 ---

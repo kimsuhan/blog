@@ -283,6 +283,48 @@ export async function publishPost(slug: string): Promise<AdminPostResult> {
   };
 }
 
+export async function archivePost(slug: string): Promise<AdminPostResult> {
+  const existing = await db.query.posts.findFirst({
+    where: eq(posts.slug, slug)
+  });
+
+  if (!existing) {
+    throw new Error("Post not found");
+  }
+
+  const filePath = path.join(process.cwd(), existing.markdownPath);
+  const current = await readMarkdownPost(filePath);
+  const now = new Date();
+  const metadata: PostMetadata = {
+    ...current.metadata,
+    status: "archived",
+    updated: now.toISOString().slice(0, 10)
+  };
+
+  await writeFile(filePath, serializeMarkdownPost(metadata, current.body), "utf8");
+  const [post] = await db
+    .update(posts)
+    .set({
+      status: "archived",
+      updatedAt: now
+    })
+    .where(eq(posts.slug, slug))
+    .returning({ id: posts.id, slug: posts.slug, status: posts.status, markdownPath: posts.markdownPath });
+
+  await db.insert(publishLogs).values({
+    postId: post.id,
+    postSlug: post.slug,
+    action: "archived",
+    metadata: { source: "admin_api", physicalDelete: false }
+  });
+
+  return {
+    slug: post.slug,
+    status: post.status,
+    markdownPath: post.markdownPath
+  };
+}
+
 async function listPostFiles(directory: string): Promise<string[]> {
   const entries = await readdir(directory, { withFileTypes: true });
   const files = await Promise.all(
