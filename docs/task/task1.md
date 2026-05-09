@@ -1,6 +1,6 @@
 ---
-status: todo
-status_label: 할일
+status: done
+status_label: 완료
 order: 1
 title: "Task 1. 프로젝트 실행 기반 정리"
 ---

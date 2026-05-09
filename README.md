@@ -32,8 +32,9 @@
 ```sh
 pnpm install
 pnpm dev
+pnpm build
 ```
 
 ## 상태
 
-현재는 구현 전 초기 상태입니다. 문서, 폴더 구조, 라우트/모듈 skeleton, 샘플 Markdown만 둔 베이스입니다.
+현재는 구현 전 초기 상태입니다. 문서, 폴더 구조, 라우트/모듈 skeleton, 샘플 Markdown만 둔 베이스입니다. 홈, 검색, 404, 게시글/태그/시리즈 skeleton 라우트가 있으며 실제 게시글 저장, DB schema, 관리자 API 동작은 아직 구현하지 않았습니다.

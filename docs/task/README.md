@@ -30,7 +30,7 @@ title: "Task 1. 프로젝트 실행 기반 정리"
 
 | 순서 | 상태 | 문서 | 주제 |
 | --- | --- | --- | --- |
-| 1 | 할일 | [task1.md](./task1.md) | 프로젝트 실행 기반 정리 |
+| 1 | 완료 | [task1.md](./task1.md) | 프로젝트 실행 기반 정리 |
 | 2 | 할일 | [task2.md](./task2.md) | Daisy UI / Tailwind 기본 연결 |
 | 3 | 할일 | [task3.md](./task3.md) | Drizzle DB 스키마 1차 작성 |
 | 4 | 할일 | [task4.md](./task4.md) | Docker Compose 개발 DB 확인 |
