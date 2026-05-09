@@ -33,7 +33,7 @@ title: "Task 1. 프로젝트 실행 기반 정리"
 | 1 | 완료 | [task1.md](./task1.md) | 프로젝트 실행 기반 정리 |
 | 2 | 완료 | [task2.md](./task2.md) | Daisy UI / Tailwind 기본 연결 |
 | 3 | 완료 | [task3.md](./task3.md) | Drizzle DB 스키마 1차 작성 |
-| 4 | 할일 | [task4.md](./task4.md) | Docker Compose 개발 DB 확인 |
+| 4 | 완료 | [task4.md](./task4.md) | Docker Compose 개발 DB 확인 |
 | 5 | 할일 | [task5.md](./task5.md) | Markdown 파일 읽기와 Frontmatter 파싱 |
 | 6 | 할일 | [task6.md](./task6.md) | Markdown HTML 렌더링 |
 | 7 | 할일 | [task7.md](./task7.md) | Post Store 1차 구현 |

@@ -1,6 +1,6 @@
 ---
-status: todo
-status_label: 할일
+status: done
+status_label: 완료
 order: 4
 title: "Task 4. Docker Compose 개발 DB 확인"
 ---
