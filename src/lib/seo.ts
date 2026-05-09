@@ -5,7 +5,7 @@ export const defaultDescription =
 const fallbackSiteUrl = "http://localhost:4321";
 
 export function getSiteUrl(): string {
-  const url = process.env.SITE_URL ?? fallbackSiteUrl;
+  const url = import.meta.env.SITE_URL ?? fallbackSiteUrl;
 
   return String(url).replace(/\/$/, "");
 }

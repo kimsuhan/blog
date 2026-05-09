@@ -21,6 +21,15 @@ Authorization: Bearer <ADMIN_API_TOKEN>
 
 초기 구현은 `ADMIN_API_TOKEN` 기반 Bearer Token으로 시작한다.
 
+`/api/admin/*` 경로는 Astro middleware에서 보호한다. 토큰이 없거나 일치하지 않으면 다음 형식으로 응답한다.
+
+```json
+{
+  "ok": false,
+  "error": "Unauthorized"
+}
+```
+
 향후 외부 자동화 도구에서 관리자 API를 호출할 경우 요청 본문 변조 방지를 위해 HMAC 검증을 추가한다.
 
 ```http

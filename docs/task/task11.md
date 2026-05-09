@@ -1,6 +1,6 @@
 ---
-status: todo
-status_label: 할일
+status: done
+status_label: 완료
 order: 11
 title: "Task 11. 인증 Middleware 구현"
 ---
