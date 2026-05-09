@@ -1,6 +1,6 @@
 ---
-status: todo
-status_label: 할일
+status: done
+status_label: 완료
 order: 3
 title: "Task 3. Drizzle DB 스키마 1차 작성"
 ---

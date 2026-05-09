@@ -35,6 +35,27 @@ pnpm dev
 pnpm build
 ```
 
+## DB migration
+
+Drizzle schema는 `drizzle/schema.ts`에서 관리하고, migration 파일은 `drizzle/migrations/` 아래에 생성합니다.
+
+```sh
+# schema 변경 후 migration 파일 생성
+pnpm db:generate
+
+# DATABASE_URL이 가리키는 PostgreSQL DB에 migration 적용
+pnpm db:migrate
+```
+
+개발 DB를 Docker Compose로 실행한 뒤 적용할 수 있습니다.
+
+```sh
+docker compose -f docker/docker-compose.yml up -d db
+pnpm db:migrate
+```
+
+`pnpm db:generate`는 SQL migration 파일만 만들고 DB에는 적용하지 않습니다. 실제 DB 반영은 `pnpm db:migrate`가 수행하므로, 운영 DB에 적용하기 전에는 `DATABASE_URL`이 올바른 대상인지 확인해야 합니다.
+
 ## 상태
 
-현재는 구현 전 초기 상태입니다. 문서, 폴더 구조, 라우트/모듈 skeleton, 샘플 Markdown만 둔 베이스입니다. 홈, 검색, 404, 게시글/태그/시리즈 skeleton 라우트가 있으며 실제 게시글 저장, DB schema, 관리자 API 동작은 아직 구현하지 않았습니다.
+현재는 문서, 폴더 구조, 라우트/모듈 skeleton, Drizzle DB schema와 초기 migration을 둔 베이스입니다. 홈, 검색, 404, 게시글/태그/시리즈 skeleton 라우트가 있으며 실제 게시글 저장과 관리자 API 동작은 아직 구현하지 않았습니다.

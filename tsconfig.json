@@ -8,12 +8,18 @@
     "noEmit": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "types": ["astro/client"],
+    "skipLibCheck": true,
+    "types": ["node"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
     }
   },
-  "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"]
+  "include": [
+    "astro.config.mjs",
+    "drizzle/**/*.ts",
+    "drizzle.config.ts",
+    "src/**/*.ts"
+  ],
+  "exclude": ["dist", ".astro", "node_modules"]
 }

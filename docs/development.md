@@ -52,6 +52,10 @@ pnpm db:migrate
 | `api_keys` | 관리자 API 키 해시와 상태 |
 | `publish_logs` | 게시글 생성, 수정, 발행, 삭제 이력 |
 
+초기 Drizzle schema는 `api_keys`, `publish_logs`를 포함한다. MVP의 첫 인증 구현은 `.env`의 `ADMIN_API_TOKEN`을 사용하지만, DB schema는 이후 API key 회전과 HMAC 필수 여부를 저장할 수 있게 둔다.
+
+검색은 `post_search_index.search_vector`에 PostgreSQL `tsvector`를 저장하고 GIN index를 둔다. `title_text`, `body_text`, `tag_text`, `series_text`, `search_text`는 검색 문서 재생성과 디버깅을 위해 원문 텍스트로 함께 유지한다.
+
 ## Docker Compose
 
 Docker 관련 파일은 `docker/` 아래에 둔다.

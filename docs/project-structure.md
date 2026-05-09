@@ -315,6 +315,31 @@ search_vector
 indexed_at
 ```
 
+`api_keys`는 초기 MVP 인증 구현은 `ADMIN_API_TOKEN` 기반으로 시작하되, 이후 DB 기반 키 관리를 위해 다음 필드를 가진다.
+
+```txt
+id
+name
+key_hash
+status: active | revoked
+hmac_required
+last_used_at
+created_at
+revoked_at
+```
+
+`publish_logs`는 관리자 API의 생성, 수정, 발행, 보관, 삭제 이력을 저장한다.
+
+```txt
+id
+post_id
+post_slug
+action: created | updated | published | archived | deleted
+actor_key_id
+metadata
+created_at
+```
+
 검색 인덱스는 다음 데이터를 통합한다.
 
 ```txt
