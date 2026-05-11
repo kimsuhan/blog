@@ -1,6 +1,6 @@
 ---
-status: todo
-status_label: 할일
+status: done
+status_label: 완료
 order: 23
 title: "Task 23. BreadcrumbList / WebSite 구조화 데이터"
 ---
@@ -34,3 +34,11 @@ title: "Task 23. BreadcrumbList / WebSite 구조화 데이터"
 
 - 주요 페이지에 구조화 데이터 출력
 - JSON-LD가 깨진 JSON을 만들지 않음
+
+## 구현 메모
+
+- WebSite JSON-LD는 공통 `Layout`에서 모든 페이지에 출력한다.
+- SearchAction은 `/search?q={search_term_string}` 기준으로 포함한다.
+- BreadcrumbList는 실제 존재하는 URL만 사용한다.
+- 홈은 `Home`, 검색은 `Home > Search`, 태그는 `Home > Tag: {tag}`, 시리즈는 `Home > Series: {series}`, 게시글은 `Home > {title}` 구조를 사용한다.
+- 복잡한 breadcrumb UI는 추가하지 않고 구조화 데이터만 출력한다.

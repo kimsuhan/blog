@@ -52,7 +52,7 @@ title: "Task 1. 프로젝트 실행 기반 정리"
 | 20 | 완료 | [task20.md](./task20.md) | 스마트 검색 인덱스 1차 생성 |
 | 21 | 완료 | [task21.md](./task21.md) | Graph Index 1차 생성 |
 | 22 | 완료 | [task22.md](./task22.md) | Article JSON-LD 구현 |
-| 23 | 할일 | [task23.md](./task23.md) | BreadcrumbList / WebSite 구조화 데이터 |
+| 23 | 완료 | [task23.md](./task23.md) | BreadcrumbList / WebSite 구조화 데이터 |
 | 24 | 할일 | [task24.md](./task24.md) | Docker 빌드 검증 |
 | 25 | 할일 | [task25.md](./task25.md) | Nginx 운영 설정 1차 |
 | 26 | 할일 | [task26.md](./task26.md) | 운영 백업 정책 문서화 |

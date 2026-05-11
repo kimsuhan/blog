@@ -40,6 +40,39 @@ export interface ArticleJsonLdInput {
   authorName?: string | null;
 }
 
+export interface BreadcrumbItem {
+  name: string;
+  url: string;
+}
+
+export function websiteJsonLd(): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: siteName,
+    url: getSiteUrl(),
+    description: defaultDescription,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${getSiteUrl()}/search?q={search_term_string}`,
+      "query-input": "required name=search_term_string"
+    }
+  };
+}
+
+export function breadcrumbListJsonLd(items: BreadcrumbItem[]): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: absoluteUrl(item.url)
+    }))
+  };
+}
+
 export function articleJsonLd(input: ArticleJsonLdInput): Record<string, unknown> {
   const url = canonicalUrl(input.canonical);
   const authorName = input.authorName?.trim() || import.meta.env.SITE_AUTHOR_NAME || defaultAuthorName;

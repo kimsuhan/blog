@@ -12,6 +12,10 @@ const posts = decodedTag ? await listPublishedPostsByTag(decodedTag) : [];
   title={`Tag: ${decodedTag}`}
   description={`Published archive records tagged ${decodedTag}`}
   canonical={`/tags/${encodeURIComponent(decodedTag)}`}
+  breadcrumbItems={[
+    { name: "Home", url: "/" },
+    { name: `Tag: ${decodedTag}`, url: `/tags/${encodeURIComponent(decodedTag)}` }
+  ]}
 >
   <main class="container">
     <section class="archive-section">

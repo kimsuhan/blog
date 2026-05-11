@@ -12,6 +12,10 @@ const posts = decodedSeries ? await listPublishedPostsBySeries(decodedSeries) : 
   title={`Series: ${decodedSeries}`}
   description={`Published archive records in ${decodedSeries}`}
   canonical={`/series/${encodeURIComponent(decodedSeries)}`}
+  breadcrumbItems={[
+    { name: "Home", url: "/" },
+    { name: `Series: ${decodedSeries}`, url: `/series/${encodeURIComponent(decodedSeries)}` }
+  ]}
 >
   <main class="container">
     <section class="archive-section">

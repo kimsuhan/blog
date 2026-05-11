@@ -39,6 +39,17 @@ const structuredData = post
   publishedTime={post?.metadata.date}
   modifiedTime={post?.metadata.updated}
   structuredData={structuredData}
+  breadcrumbItems={
+    post
+      ? [
+          { name: "Home", url: "/" },
+          { name: post.metadata.title, url: `/posts/${post.metadata.slug}` }
+        ]
+      : [
+          { name: "Home", url: "/" },
+          { name: "Post not found", url: Astro.url.pathname }
+        ]
+  }
 >
   <main class="content-container">
     {post ? (
