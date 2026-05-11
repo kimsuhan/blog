@@ -1,6 +1,6 @@
 ---
-status: todo
-status_label: 할일
+status: done
+status_label: 완료
 order: 21
 title: "Task 21. Graph Index 1차 생성"
 ---
@@ -35,3 +35,10 @@ title: "Task 21. Graph Index 1차 생성"
 
 - graph index JSON 생성 가능
 - Git에는 생성된 graph index를 올리지 않음
+
+## 구현 메모
+
+- `src/lib/graph.ts`에서 published 게시글을 nodes로, `wikilink` 타입의 `post_links`를 edges로 변환한다.
+- graph index는 `data/graph-index.json`에 생성하며, 생성 파일은 Git 추적 대상이 아니다.
+- 관리자 API의 생성/수정/발행/보관 흐름 이후 graph index 파일을 재생성한다.
+- MVP 범위에서는 시각화 UI나 클라이언트 그래프 라이브러리를 추가하지 않는다.

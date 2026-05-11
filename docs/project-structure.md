@@ -120,7 +120,7 @@ PostgreSQL = 글 상태와 구조화 데이터
 | `content/posts/*.md` | 운영 서버의 게시글 원문, 본문, frontmatter |
 | PostgreSQL | slug, 제목, 발행 상태, 태그, 시리즈, 작성일, 수정일, SEO 메타데이터 |
 | PostgreSQL | wikilink 분석 결과, 백링크, 검색 인덱스 |
-| Filesystem cache | 필요 시 렌더링된 HTML 캐시 |
+| Filesystem cache | 필요 시 렌더링된 HTML 캐시, 그래프 인덱스 생성물 |
 
 ## 7. 예상 디렉터리 구조
 
@@ -196,6 +196,8 @@ PostgreSQL = 글 상태와 구조화 데이터
 └─ tsconfig.json
 ```
 
+`data/search-index.json`과 `data/graph-index.json`은 런타임 생성물이다. 저장소에는 `data/.gitkeep`만 유지하고 생성된 JSON 파일은 Git에 올리지 않는다.
+
 ## 8. 주요 모듈 책임
 
 | 모듈 | 책임 |
@@ -207,6 +209,7 @@ PostgreSQL = 글 상태와 구조화 데이터
 | Auth Middleware | 관리자 API 요청 인증 |
 | DB Client | PostgreSQL 연결 및 Drizzle ORM 쿼리 관리 |
 | Search Indexer | 제목, 본문, 태그, 시리즈를 통합한 PostgreSQL 검색 인덱스 생성 |
+| Graph Indexer | published 게시글과 wikilink 관계를 `data/graph-index.json` 생성물로 변환 |
 
 ## 8.1 스타일링 기준
 

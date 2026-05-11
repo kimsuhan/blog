@@ -11,7 +11,7 @@ import {
   type ParsedMarkdownPost,
   type PostMetadata
 } from "./markdown";
-import { parseWikilinks } from "./graph";
+import { parseWikilinks, writeGraphIndexFile } from "./graph";
 import { removePostSearchIndex, syncPostSearchIndex } from "./search-index";
 
 const postsRoot = path.join(process.cwd(), "content", "posts");
@@ -190,6 +190,7 @@ export async function createDraftPost(input: CreateDraftPostInput): Promise<Admi
   await syncPostTags(post.id, metadata.tags);
   await syncPostLinks(post.id, metadata.slug, normalized.markdown);
   await removePostSearchIndex(post.id);
+  await writeGraphIndexFile();
 
   return {
     slug: post.slug,
@@ -255,6 +256,7 @@ export async function updatePost(slug: string, input: UpdatePostInput): Promise<
   await syncPostTags(post.id, metadata.tags);
   await syncPostLinks(post.id, metadata.slug, markdown);
   await syncPostSearchIndex(post, metadata, markdown);
+  await writeGraphIndexFile();
 
   return {
     slug: post.slug,
@@ -368,6 +370,7 @@ export async function publishPost(slug: string): Promise<AdminPostResult> {
     metadata: { source: "admin_api" }
   });
   await syncPostSearchIndex(post, metadata, current.body);
+  await writeGraphIndexFile();
 
   return {
     slug: post.slug,
@@ -419,6 +422,7 @@ export async function archivePost(slug: string): Promise<AdminPostResult> {
     metadata: { source: "admin_api", physicalDelete: false }
   });
   await removePostSearchIndex(post.id);
+  await writeGraphIndexFile();
 
   return {
     slug: post.slug,
