@@ -53,8 +53,13 @@ title: "Task 1. 프로젝트 실행 기반 정리"
 | 21 | 완료 | [task21.md](./task21.md) | Graph Index 1차 생성 |
 | 22 | 완료 | [task22.md](./task22.md) | Article JSON-LD 구현 |
 | 23 | 완료 | [task23.md](./task23.md) | BreadcrumbList / WebSite 구조화 데이터 |
-| 24 | 할일 | [task24.md](./task24.md) | Docker 빌드 검증 |
-| 25 | 할일 | [task25.md](./task25.md) | Nginx 운영 설정 1차 |
-| 26 | 할일 | [task26.md](./task26.md) | 운영 백업 정책 문서화 |
-| 27 | 할일 | [task27.md](./task27.md) | MVP 통합 점검 |
 | 28 | 할일 | [task28.md](./task28.md) | Phase 2 계획 재정리 |
+
+## 운영 수동 진행 항목
+
+아래 항목은 사용자가 운영 환경에서 직접 설정하고 검증한다. 이 프로젝트의 구현 task 흐름에서는 제외한다.
+
+- Docker 빌드와 compose 기동 검증
+- Nginx 운영 reverse proxy 설정
+- 운영 백업 정책과 백업 스크립트
+- 개인 도메인, Cloudflare, SSL/TLS, 운영 서버 배포 점검

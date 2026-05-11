@@ -27,6 +27,7 @@ pnpm build
 | `DATABASE_URL` | PostgreSQL 연결 문자열 |
 | `ADMIN_API_TOKEN` | 관리자 API Bearer Token |
 | `SITE_URL` | canonical, sitemap, RSS, robots.txt에 사용할 공개 사이트 기본 URL |
+| `SITE_AUTHOR_NAME` | Article JSON-LD author fallback 이름 |
 
 초기 환경 변수 템플릿은 `.env.example`에 둔다.
 
