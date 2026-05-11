@@ -1,8 +1,11 @@
 ---
 import Layout from "@/components/Layout.astro";
 import { listPublishedPosts } from "@/lib/post-store";
+import { searchPublishedPosts } from "@/lib/search-index";
 
+const query = Astro.url.searchParams.get("q")?.trim() ?? "";
 const posts = await listPublishedPosts();
+const searchResults = query ? await searchPublishedPosts(query) : [];
 const previewPosts = posts.slice(0, 3);
 const previewTags = Array.from(new Set(posts.flatMap((post) => post.metadata.tags))).slice(0, 6);
 ---
@@ -10,12 +13,19 @@ const previewTags = Array.from(new Set(posts.flatMap((post) => post.metadata.tag
 <Layout title="Search" description="Search the archive" canonical="/search">
   <main class="search-page container">
     <a class="search-close archive-label archive-muted" href="/" aria-label="Close search">Close</a>
-    <section class="search-panel" aria-label="Archive search">
-      <input class="search-input search-input-large" type="search" placeholder="Search the archive..." autofocus />
+    <form class="search-panel" action="/search" method="get" aria-label="Archive search">
+      <input
+        class="search-input search-input-large"
+        type="search"
+        name="q"
+        value={query}
+        placeholder="Search the archive..."
+        autofocus
+      />
       <div class="search-preview">
         <div class="preview-tags">
           {previewTags.length > 0 ? (
-            previewTags.map((tag) => <a href={`/tags/${encodeURIComponent(tag)}`}>{tag}</a>)
+            previewTags.map((tag) => <a href={`/search?q=${encodeURIComponent(tag)}`}>{tag}</a>)
           ) : (
             <>
               <span>Manuscripts</span>
@@ -24,19 +34,38 @@ const previewTags = Array.from(new Set(posts.flatMap((post) => post.metadata.tag
             </>
           )}
         </div>
-        <p class="archive-label archive-muted">Search index will be connected in task20</p>
+        <p class="archive-label archive-muted">
+          {query ? `${searchResults.length} indexed records found` : "Search title, body, tags, and series"}
+        </p>
       </div>
-    </section>
+    </form>
 
     <section class="search-results-preview">
-      {previewPosts.map((post) => (
-        <a href={`/posts/${post.metadata.slug}`}>
-          <span class="archive-label archive-muted">REF / {post.metadata.slug}</span>
-          <strong>{post.metadata.title}</strong>
-          <small>{post.metadata.series ?? "Archive Record"}</small>
-        </a>
-      ))}
-      {previewPosts.length === 0 && <p class="archive-muted">No published preview records available.</p>}
+      {query ? (
+        searchResults.length > 0 ? (
+          searchResults.map((post) => (
+            <a href={`/posts/${post.slug}`}>
+              <span class="archive-label archive-muted">REF / {post.slug}</span>
+              <strong>{post.title}</strong>
+              <small>{post.series ?? (post.tags.join(", ") || "Archive Record")}</small>
+              {post.excerpt && <p>{post.excerpt}</p>}
+            </a>
+          ))
+        ) : (
+          <p class="archive-muted">No indexed records matched this search.</p>
+        )
+      ) : (
+        <>
+          {previewPosts.map((post) => (
+            <a href={`/posts/${post.metadata.slug}`}>
+              <span class="archive-label archive-muted">REF / {post.metadata.slug}</span>
+              <strong>{post.metadata.title}</strong>
+              <small>{post.metadata.series ?? "Archive Record"}</small>
+            </a>
+          ))}
+          {previewPosts.length === 0 && <p class="archive-muted">No published preview records available.</p>}
+        </>
+      )}
     </section>
   </main>
 </Layout>

@@ -49,7 +49,7 @@ title: "Task 1. 프로젝트 실행 기반 정리"
 | 17 | 완료 | [task17.md](./task17.md) | Post Links 저장과 백링크 |
 | 18 | 완료 | [task18.md](./task18.md) | 태그 추출과 태그 페이지 |
 | 19 | 완료 | [task19.md](./task19.md) | 관련 글 표시 |
-| 20 | 할일 | [task20.md](./task20.md) | 스마트 검색 인덱스 1차 생성 |
+| 20 | 완료 | [task20.md](./task20.md) | 스마트 검색 인덱스 1차 생성 |
 | 21 | 할일 | [task21.md](./task21.md) | Graph Index 1차 생성 |
 | 22 | 할일 | [task22.md](./task22.md) | Article JSON-LD 구현 |
 | 23 | 할일 | [task23.md](./task23.md) | BreadcrumbList / WebSite 구조화 데이터 |

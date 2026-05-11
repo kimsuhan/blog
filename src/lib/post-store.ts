@@ -12,6 +12,7 @@ import {
   type PostMetadata
 } from "./markdown";
 import { parseWikilinks } from "./graph";
+import { removePostSearchIndex, syncPostSearchIndex } from "./search-index";
 
 const postsRoot = path.join(process.cwd(), "content", "posts");
 const postPathPattern = /^\d{4}\/\d{2}\/[^/]+\.md$/;
@@ -176,10 +177,19 @@ export async function createDraftPost(input: CreateDraftPostInput): Promise<Admi
       canonicalUrl: metadata.canonical,
       ogImage: metadata.ogImage
     })
-    .returning({ id: posts.id, slug: posts.slug, status: posts.status, markdownPath: posts.markdownPath });
+    .returning({
+      id: posts.id,
+      slug: posts.slug,
+      title: posts.title,
+      description: posts.description,
+      status: posts.status,
+      series: posts.series,
+      markdownPath: posts.markdownPath
+    });
 
   await syncPostTags(post.id, metadata.tags);
   await syncPostLinks(post.id, metadata.slug, normalized.markdown);
+  await removePostSearchIndex(post.id);
 
   return {
     slug: post.slug,
@@ -231,11 +241,20 @@ export async function updatePost(slug: string, input: UpdatePostInput): Promise<
       updatedAt: new Date()
     })
     .where(eq(posts.slug, slug))
-    .returning({ id: posts.id, slug: posts.slug, status: posts.status, markdownPath: posts.markdownPath });
+    .returning({
+      id: posts.id,
+      slug: posts.slug,
+      title: posts.title,
+      description: posts.description,
+      status: posts.status,
+      series: posts.series,
+      markdownPath: posts.markdownPath
+    });
 
   await db.delete(postTags).where(eq(postTags.postId, post.id));
   await syncPostTags(post.id, metadata.tags);
   await syncPostLinks(post.id, metadata.slug, markdown);
+  await syncPostSearchIndex(post, metadata, markdown);
 
   return {
     slug: post.slug,
@@ -332,7 +351,15 @@ export async function publishPost(slug: string): Promise<AdminPostResult> {
       updatedAt: now
     })
     .where(eq(posts.slug, slug))
-    .returning({ id: posts.id, slug: posts.slug, status: posts.status, markdownPath: posts.markdownPath });
+    .returning({
+      id: posts.id,
+      slug: posts.slug,
+      title: posts.title,
+      description: posts.description,
+      status: posts.status,
+      series: posts.series,
+      markdownPath: posts.markdownPath
+    });
 
   await db.insert(publishLogs).values({
     postId: post.id,
@@ -340,6 +367,7 @@ export async function publishPost(slug: string): Promise<AdminPostResult> {
     action: "published",
     metadata: { source: "admin_api" }
   });
+  await syncPostSearchIndex(post, metadata, current.body);
 
   return {
     slug: post.slug,
@@ -374,7 +402,15 @@ export async function archivePost(slug: string): Promise<AdminPostResult> {
       updatedAt: now
     })
     .where(eq(posts.slug, slug))
-    .returning({ id: posts.id, slug: posts.slug, status: posts.status, markdownPath: posts.markdownPath });
+    .returning({
+      id: posts.id,
+      slug: posts.slug,
+      title: posts.title,
+      description: posts.description,
+      status: posts.status,
+      series: posts.series,
+      markdownPath: posts.markdownPath
+    });
 
   await db.insert(publishLogs).values({
     postId: post.id,
@@ -382,6 +418,7 @@ export async function archivePost(slug: string): Promise<AdminPostResult> {
     action: "archived",
     metadata: { source: "admin_api", physicalDelete: false }
   });
+  await removePostSearchIndex(post.id);
 
   return {
     slug: post.slug,
