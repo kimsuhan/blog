@@ -188,8 +188,7 @@ PostgreSQL = 글 상태와 구조화 데이터
 │  └─ migrations/
 ├─ docker/
 │  ├─ Dockerfile
-│  ├─ docker-compose.yml
-│  └─ nginx.conf
+│  └─ docker-compose.yml
 ├─ package.json
 ├─ astro.config.mjs
 ├─ drizzle.config.ts
@@ -538,11 +537,10 @@ Bot fight mode 선택 적용
 | 서비스 | 역할 |
 | --- | --- |
 | `app` | Astro Node Server |
-| `db` | PostgreSQL |
-| `nginx` | 리버스 프록시 |
-| `backup` | DB와 Markdown 백업 작업 |
 
-외부 트래픽은 Cloudflare를 거쳐 Nginx로 들어오며, Nginx가 Astro Node Server로 요청을 전달한다.
+저장소의 `docker/docker-compose.yml`은 app 서비스만 실행한다. PostgreSQL, Nginx, backup 작업은 운영 환경에서 사용자가 별도로 준비하고 연결한다.
+
+외부 트래픽은 Cloudflare와 사용자가 구성한 reverse proxy를 거쳐 Astro Node Server로 전달한다.
 
 운영 서버 디렉터리 기준:
 
@@ -552,7 +550,7 @@ Bot fight mode 선택 적용
   content/
   postgres/
   backups/
-  nginx/
+  proxy/
 ```
 
 백업 대상:
@@ -562,7 +560,6 @@ PostgreSQL dump
 content/posts/*.md
 public/images
 .env
-nginx.conf
 docker-compose.yml
 ```
 

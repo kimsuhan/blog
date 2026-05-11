@@ -60,28 +60,11 @@ pnpm db:migrate
 
 ## Docker Compose
 
-Docker 관련 파일은 `docker/` 아래에 둔다.
+Docker 관련 파일은 `docker/` 아래에 둔다. 저장소의 compose 파일은 Astro app 컨테이너만 실행한다.
+PostgreSQL과 Nginx는 운영 환경에서 별도로 준비하고, app에는 `.env`의 `DATABASE_URL`과 공개 URL 값을 주입한다.
 
 ```sh
 docker compose -f docker/docker-compose.yml up --build
-```
-
-개발 중 DB만 실행할 때는 다음 명령을 사용한다.
-
-```sh
-docker compose -f docker/docker-compose.yml up -d db
-```
-
-`db` 서비스는 PostgreSQL 17 Alpine 이미지를 사용하며 로컬 호스트의 `5433` 포트로 노출한다. 컨테이너 내부 PostgreSQL 포트는 `5432`를 유지하고, 호스트 포트만 `5433`을 사용해 로컬에 이미 설치된 PostgreSQL과 충돌하지 않게 한다. 개발용 접속 정보는 `.env.example`과 동일하게 맞춘다.
-
-```txt
-DATABASE_URL=postgres://blog:blog@localhost:5433/blog
-```
-
-컨테이너 내부에서 `app` 서비스가 DB에 접속할 때는 Compose 서비스명을 사용한다.
-
-```txt
-postgres://blog:blog@db:5432/blog
 ```
 
 구성 서비스:
@@ -89,20 +72,11 @@ postgres://blog:blog@db:5432/blog
 | 서비스 | 역할 |
 | --- | --- |
 | `app` | Astro Node Server |
-| `db` | PostgreSQL |
-| `nginx` | 리버스 프록시 |
 
-PostgreSQL 데이터는 Docker named volume인 `postgres-data`에 저장한다. 개발 DB를 초기화해야 할 때만 아래처럼 volume까지 삭제한다.
-
-```sh
-docker compose -f docker/docker-compose.yml down -v
-```
-
-Drizzle migration 적용 흐름:
+DB migration은 app compose와 분리해서, `DATABASE_URL`이 실제 대상 DB를 가리키는지 확인한 뒤 실행한다.
 
 ```sh
 cp .env.example .env
-docker compose -f docker/docker-compose.yml up -d db
 pnpm db:generate
 pnpm db:migrate
 ```
@@ -111,10 +85,9 @@ DB 연결에 실패하면 다음 항목을 먼저 확인한다.
 
 | 증상 | 확인할 항목 |
 | --- | --- |
-| `ECONNREFUSED 127.0.0.1:5433` | `db` 컨테이너가 실행 중인지, `docker/docker-compose.yml`의 `5433:5432` 포트가 열려 있는지 확인 |
-| `Bind for 0.0.0.0:5433 failed` | 호스트의 `5433` 포트가 이미 사용 중인지 확인하고, 필요하면 Compose 포트와 `.env`의 `DATABASE_URL`을 같은 값으로 변경 |
-| `password authentication failed` | `.env`의 `DATABASE_URL`이 `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`와 일치하는지 확인 |
-| `database "blog" does not exist` | 기존 `postgres-data` volume이 다른 초기값으로 만들어졌는지 확인하고, 개발 데이터 삭제가 가능하면 `down -v` 후 재시작 |
+| `ECONNREFUSED` | `DATABASE_URL`이 가리키는 외부 PostgreSQL이 실행 중인지, app 컨테이너에서 접근 가능한 주소인지 확인 |
+| `password authentication failed` | `.env`의 `DATABASE_URL` 계정 정보가 실제 DB 계정과 일치하는지 확인 |
+| `database "blog" does not exist` | 대상 PostgreSQL에 DB가 생성되어 있는지 확인 |
 | `type "tsvector" does not exist` | PostgreSQL이 아닌 다른 DB에 연결한 것이 아닌지 `DATABASE_URL` 확인 |
 
 ## 콘텐츠 작성
@@ -144,4 +117,4 @@ content/posts/2026/05/my-post.md
 | 5 | Auth Middleware, 게시글 생성/수정/발행/삭제 API |
 | 6 | SeoHead, sitemap, RSS, robots.txt, JSON-LD, canonical |
 | 7 | 검색 인덱스 생성, 태그 파싱, wikilink 파싱, post_links 저장, 백링크 |
-| 8 | Dockerfile, docker-compose, nginx.conf, Cloudflare DNS, SSL/TLS Full(strict) |
+| 8 | Dockerfile, app compose, Cloudflare DNS, SSL/TLS Full(strict) |

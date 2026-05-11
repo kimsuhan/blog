@@ -47,12 +47,7 @@ pnpm db:generate
 pnpm db:migrate
 ```
 
-개발 DB를 Docker Compose로 실행한 뒤 적용할 수 있습니다.
-
-```sh
-docker compose -f docker/docker-compose.yml up -d db
-pnpm db:migrate
-```
+DB는 compose 밖에서 별도로 준비하고, `DATABASE_URL`이 해당 DB를 가리키는 상태에서 migration을 적용합니다.
 
 `pnpm db:generate`는 SQL migration 파일만 만들고 DB에는 적용하지 않습니다. 실제 DB 반영은 `pnpm db:migrate`가 수행하므로, 운영 DB에 적용하기 전에는 `DATABASE_URL`이 올바른 대상인지 확인해야 합니다.
 

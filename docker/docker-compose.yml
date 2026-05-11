@@ -3,39 +3,9 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile
+    env_file:
+      - ../.env
     environment:
-      DATABASE_URL: postgres://blog:blog@db:5432/blog
-      ADMIN_API_TOKEN: change-me
-    depends_on:
-      - db
+      NODE_ENV: production
     ports:
       - "4321:4321"
-
-  db:
-    image: postgres:17-alpine
-    environment:
-      POSTGRES_USER: blog
-      POSTGRES_PASSWORD: blog
-      POSTGRES_DB: blog
-    ports:
-      - "5433:5432"
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U blog -d blog"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-
-  nginx:
-    image: nginx:1.27-alpine
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
-    depends_on:
-      - app
-
-volumes:
-  postgres-data:
