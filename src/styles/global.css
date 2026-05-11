@@ -78,37 +78,43 @@ a {
 
 .archive-hero {
   display: grid;
-  min-height: calc(100vh - 9rem);
+  min-height: 100dvh;
   place-items: center;
   position: relative;
 }
 
 .search-symbol {
-  display: grid;
-  width: 132px;
-  height: 132px;
-  place-items: center;
-  opacity: 0.28;
-  transition:
-    opacity 180ms ease,
-    transform 180ms ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 64px;
+  text-decoration: none;
+  transition: transform 180ms ease;
 }
 
 .search-symbol:hover {
-  opacity: 1;
   transform: translateY(-2px);
 }
 
 .search-symbol span {
   display: block;
+}
+
+.search-symbol > span:first-child {
   width: 72px;
   height: 72px;
   position: relative;
   border: 2px solid currentColor;
   border-radius: 999px;
+  opacity: 0.28;
+  transition: opacity 180ms ease;
 }
 
-.search-symbol span::after {
+.search-symbol:hover > span:first-child {
+  opacity: 1;
+}
+
+.search-symbol > span:first-child::after {
   content: "";
   width: 34px;
   height: 2px;
@@ -124,11 +130,9 @@ a {
   display: grid;
   gap: 16px;
   justify-items: center;
-  position: absolute;
-  bottom: 24px;
 }
 
-.scroll-cue span {
+.scroll-cue > span {
   width: 1px;
   height: 72px;
   background: currentColor;

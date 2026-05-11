@@ -1,43 +1,45 @@
 ---
-status: done
-status_label: 완료
+status: todo
+status_label: 할일
 order: 3
-title: "Task 3. Drizzle DB 스키마 1차 작성"
+title: "Task 3. 게시글 수정 이력"
 ---
 
-# Task 3. Drizzle DB 스키마 1차 작성
+# Task 3. 게시글 수정 이력
 
 ## 목표
 
-문서에 정의된 MVP DB 테이블을 Drizzle schema로 작성한다.
+게시글 변경 내역을 추적해 수정 사고 발생 시 원인 파악과 수동 복구 판단을 돕는다.
 
 ## 작업 내용
 
-- `posts` 테이블 작성
-- `tags` 테이블 작성
-- `post_tags` 테이블 작성
-- `post_links` 테이블 작성
-- `post_search_index` 테이블 작성
-- `api_keys`, `publish_logs` 포함 여부 결정 후 문서와 일치시킴
-- `posts.status` 값으로 `draft | published | archived` 사용
-- slug, status, tag slug, 검색 vector 등에 필요한 index 정의
+- 수정 이력 schema 설계
+- 생성 / 수정 / 발행 / 보관 이벤트 기록 범위 결정
+- metadata 변경 전후 요약 저장 방식 결정
+- Markdown 본문 스냅샷 저장 여부 결정
+- 관리자 API mutation 흐름에 이력 저장 연결
+- 기존 `publish_logs`와 역할 분리
 
 ## 수정 예상 파일
 
 - `drizzle/schema.ts`
-- `drizzle.config.ts`
-- `docs/project-structure.md`
-- `docs/development.md`
+- `drizzle/migrations/*`
+- `src/lib/post-store.ts`
+- `src/lib/post-history.ts`
+- `docs/api.md`
+- `docs/phase2.md`
 
 ## 하지 말 것
 
-- API 구현하지 않기
-- Markdown 파일 저장 로직 구현하지 않기
-- migration을 운영 DB에 적용하지 않기
+- rollback UI 만들지 않기
+- 관리자 웹 UI 만들지 않기
+- 운영 백업을 수정 이력 기능으로 대체하지 않기
+- 공개 페이지에 수정 이력 노출하지 않기
 
 ## 완료 기준
 
-- Drizzle schema가 문서의 DB 설계와 일치
-- `post_search_index`가 제목, 본문, 태그, 시리즈 통합 검색을 지원
-- `pnpm db:generate`로 migration 생성 가능
-- schema 필드명이 문서와 충돌하지 않음
+- 게시글 생성 / 수정 / 발행 / 보관 시 이력 저장
+- 변경 시각, 대상 slug, action, 변경 주체 기준이 저장됨
+- metadata 변경 요약이 확인 가능
+- Markdown 본문 저장 방식이 명확히 결정됨
+- 복구는 수동 기준으로 문서화되고 자동 rollback은 포함하지 않음
