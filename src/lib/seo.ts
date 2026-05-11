@@ -1,6 +1,7 @@
 export const siteName = "Library Archive";
 export const defaultDescription =
   "A search-first personal Markdown knowledge archive for technical notes and references.";
+export const defaultAuthorName = "Library Archive";
 
 const fallbackSiteUrl = "http://localhost:4321";
 
@@ -26,6 +27,59 @@ export function canonicalUrl(pathOrUrl: string): string {
 
 export function pageTitle(title: string): string {
   return title === siteName ? title : `${title} | ${siteName}`;
+}
+
+export interface ArticleJsonLdInput {
+  title: string;
+  description?: string | null;
+  canonical: string;
+  publishedAt?: string | null;
+  updatedAt?: string | null;
+  tags?: string[];
+  ogImage?: string | null;
+  authorName?: string | null;
+}
+
+export function articleJsonLd(input: ArticleJsonLdInput): Record<string, unknown> {
+  const url = canonicalUrl(input.canonical);
+  const authorName = input.authorName?.trim() || import.meta.env.SITE_AUTHOR_NAME || defaultAuthorName;
+  const publishedAt = input.publishedAt || input.updatedAt || new Date().toISOString();
+  const updatedAt = input.updatedAt || publishedAt;
+  const jsonLd: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: input.title,
+    description: input.description || defaultDescription,
+    url,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": url
+    },
+    datePublished: publishedAt,
+    dateModified: updatedAt,
+    author: {
+      "@type": "Person",
+      name: authorName
+    },
+    publisher: {
+      "@type": "Organization",
+      name: siteName
+    }
+  };
+
+  if (input.tags && input.tags.length > 0) {
+    jsonLd.keywords = input.tags;
+  }
+
+  if (input.ogImage) {
+    jsonLd.image = absoluteUrl(input.ogImage);
+  }
+
+  return jsonLd;
+}
+
+export function serializeJsonLd(data: unknown): string {
+  return JSON.stringify(data).replace(/</g, "\\u003c");
 }
 
 export function escapeXml(value: string): string {

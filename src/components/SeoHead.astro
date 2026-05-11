@@ -1,5 +1,5 @@
 ---
-import { absoluteUrl, defaultDescription, pageTitle } from "@/lib/seo";
+import { absoluteUrl, defaultDescription, pageTitle, serializeJsonLd } from "@/lib/seo";
 
 interface Props {
   title: string;
@@ -9,6 +9,7 @@ interface Props {
   type?: "website" | "article";
   publishedTime?: string | null;
   modifiedTime?: string | null;
+  structuredData?: unknown | unknown[];
 }
 
 const {
@@ -18,11 +19,17 @@ const {
   ogImage,
   type = "website",
   publishedTime,
-  modifiedTime
+  modifiedTime,
+  structuredData
 } = Astro.props;
 const fullTitle = pageTitle(title);
 const absoluteCanonical = canonical ? absoluteUrl(canonical) : undefined;
 const absoluteOgImage = ogImage ? absoluteUrl(ogImage) : undefined;
+const jsonLdItems = Array.isArray(structuredData)
+  ? structuredData
+  : structuredData
+    ? [structuredData]
+    : [];
 ---
 
 <title>{fullTitle}</title>
@@ -40,3 +47,4 @@ const absoluteOgImage = ogImage ? absoluteUrl(ogImage) : undefined;
 <meta name="twitter:title" content={fullTitle} />
 <meta name="twitter:description" content={description} />
 {absoluteOgImage && <meta name="twitter:image" content={absoluteOgImage} />}
+{jsonLdItems.map((item) => <script type="application/ld+json" set:html={serializeJsonLd(item)} />)}

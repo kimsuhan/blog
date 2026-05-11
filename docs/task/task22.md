@@ -1,6 +1,6 @@
 ---
-status: todo
-status_label: 할일
+status: done
+status_label: 완료
 order: 22
 title: "Task 22. Article JSON-LD 구현"
 ---
@@ -34,3 +34,13 @@ title: "Task 22. Article JSON-LD 구현"
 
 - 게시글 상세 HTML에 유효한 Article JSON-LD 출력
 - 필수 값 누락 시 fallback 기준 명확
+
+## 구현 메모
+
+- Article JSON-LD는 `src/lib/seo.ts`의 `articleJsonLd`에서 생성한다.
+- 게시글 상세 페이지는 `Layout` -> `SeoHead` 경로로 `application/ld+json` script를 출력한다.
+- `description`이 비어 있으면 사이트 기본 설명을 사용한다.
+- `datePublished`는 `publishedAt`, 없으면 `updatedAt`, 둘 다 없으면 현재 시각을 사용한다.
+- `dateModified`는 `updatedAt`, 없으면 `datePublished`를 사용한다.
+- author는 `SITE_AUTHOR_NAME`을 우선하고, 없으면 `Library Archive`를 사용한다.
+- 자동 OG 이미지 생성은 하지 않고, 게시글 `ogImage`가 있을 때만 `image`를 출력한다.

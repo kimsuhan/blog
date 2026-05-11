@@ -5,6 +5,7 @@ import RelatedPosts from "@/components/RelatedPosts.astro";
 import TagList from "@/components/TagList.astro";
 import { renderMarkdown } from "@/lib/markdown";
 import { getPublishedPostBySlug, listBacklinks, listOutgoingLinks } from "@/lib/post-store";
+import { articleJsonLd } from "@/lib/seo";
 
 const { slug } = Astro.params;
 const post = slug ? await getPublishedPostBySlug(slug) : null;
@@ -16,6 +17,17 @@ if (!post) {
 const html = post ? renderMarkdown(post.body) : "";
 const backlinks = post ? await listBacklinks(post.metadata.slug) : [];
 const outgoingLinks = post ? await listOutgoingLinks(post.metadata.slug) : [];
+const structuredData = post
+  ? articleJsonLd({
+      title: post.metadata.title,
+      description: post.metadata.description,
+      canonical: post.metadata.canonical ?? `/posts/${post.metadata.slug}`,
+      publishedAt: post.metadata.date,
+      updatedAt: post.metadata.updated,
+      tags: post.metadata.tags,
+      ogImage: post.metadata.ogImage
+    })
+  : undefined;
 ---
 
 <Layout
@@ -26,6 +38,7 @@ const outgoingLinks = post ? await listOutgoingLinks(post.metadata.slug) : [];
   type={post ? "article" : "website"}
   publishedTime={post?.metadata.date}
   modifiedTime={post?.metadata.updated}
+  structuredData={structuredData}
 >
   <main class="content-container">
     {post ? (
