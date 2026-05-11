@@ -53,7 +53,7 @@ title: "Task 1. 프로젝트 실행 기반 정리"
 | 21 | 완료 | [task21.md](./task21.md) | Graph Index 1차 생성 |
 | 22 | 완료 | [task22.md](./task22.md) | Article JSON-LD 구현 |
 | 23 | 완료 | [task23.md](./task23.md) | BreadcrumbList / WebSite 구조화 데이터 |
-| 28 | 할일 | [task28.md](./task28.md) | Phase 2 계획 재정리 |
+| 28 | 완료 | [task28.md](./task28.md) | Phase 2 계획 재정리 |
 
 ## 운영 수동 진행 항목
 

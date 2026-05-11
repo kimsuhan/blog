@@ -1,6 +1,6 @@
 ---
-status: todo
-status_label: 할일
+status: done
+status_label: 완료
 order: 28
 title: "Task 28. Phase 2 계획 재정리"
 ---
@@ -33,3 +33,9 @@ MVP 완료 후 진행할 Phase 2 작업을 실제 운영 경험에 맞춰 재정
 
 - Phase 2 우선순위가 문서화됨
 - MVP와 Phase 2 경계가 명확함
+
+## 구현 메모
+
+- `docs/phase2.md`를 추가해 Phase 2 우선순위와 각 작업의 범위를 정리했다.
+- `docs/mvp-roadmap.md`의 Phase 2 섹션은 상세 문서 링크와 요약 표로 정리했다.
+- 자동 백업 스크립트, Nginx, DB, Cloudflare 같은 운영 작업은 사용자가 직접 관리하는 항목으로 분리했다.

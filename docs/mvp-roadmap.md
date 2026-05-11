@@ -39,14 +39,17 @@ Meilisearch 연동
 
 ## Phase 2
 
-```txt
-draft preview 페이지
-Pagefind 또는 Meilisearch 연동
-검색 랭킹 고도화
-API 요청 로그
-게시글 수정 이력
-자동 백업 스크립트
-```
+Phase 2는 MVP 운영 후 작성, 발행, 검색 경험을 보강하는 애플리케이션 기능에 집중한다. 세부 계획과 우선순위는 [`docs/phase2.md`](./phase2.md)를 기준으로 한다.
+
+| 우선순위 | 작업 | 방향 |
+| --- | --- | --- |
+| P1 | draft preview 페이지 | 발행 전 렌더링과 SEO 값을 인증된 경로에서 확인 |
+| P1 | API 요청 로그 | 관리자 API 호출 감사 로그 저장 |
+| P2 | 게시글 수정 이력 | 변경 추적과 수동 복구 판단 보조 |
+| P2 | 검색 랭킹 고도화 | PostgreSQL 검색 품질을 먼저 개선 |
+| P3 | Pagefind 또는 Meilisearch 선택 | 운영 글 수와 검색 불만이 확인된 뒤 재검토 |
+
+자동 백업 스크립트, Nginx, DB, Cloudflare 같은 운영 작업은 사용자가 직접 관리하므로 앱 구현 task에서는 제외한다.
 
 ## Phase 3
 
